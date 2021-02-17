@@ -25,7 +25,7 @@ for (i in 1:nSim){
   cat("iteration", i, "has event rate =", round(table(plasmodeData.i$EVENT)[2]/length(plasmodeData.i$EVENT),2),
       "exposure prevalence =", round(table(plasmodeData.i$swang1)[2]/length(plasmodeData.i$swang1),2),
       "OR =", round(estORx,2),
-      "cumulative OR=", round(mean(saveOR),2),"\n")
+      "cumulative mean OR=", round(mean(saveOR),2),"\n")
 }
 rm(simdata)
 
@@ -51,6 +51,6 @@ for (i in 1:nSim){
   cat("iteration", i, "has event rate =", round(table(plasmodeData.i$EVENT)[2]/length(plasmodeData.i$EVENT),2),
       "exposure prevalence =", round(table(plasmodeData.i$swang1)[2]/length(plasmodeData.i$swang1),2),
       "OR =", round(estORx,2),
-      "cumulative OR=", round(mean(saveOR),2),"\n")
+      "cumulative mean OR=", round(mean(saveOR),2),"\n")
 }
 

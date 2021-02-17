@@ -247,7 +247,7 @@ head(rhc)</code></pre>
 <h1>User-written Function</h1>
 <pre class="r"><code># Plasmode simulation
 source(&quot;PlasmodeSim.R&quot;)
-nSim &lt;- 20
+nSim &lt;- 100
 simdata &lt;- PlasmodeBinSim(x = rhc, idVar = &quot;id&quot;, outcomeVar = &quot;death&quot;, treatVar = &quot;swang1&quot;, treatLabel = &quot;&quot;,
                           form = paste0(vars, collapse = &quot;+&quot;), 
                           effectOR = 3, MM = 1, nsim = nSim, size = 3000, 
@@ -261,11 +261,11 @@ simdata &lt;- PlasmodeBinSim(x = rhc, idVar = &quot;id&quot;, outcomeVar = &quot
 <pre><code>## Deviance = 6051.24785515008 Iterations - 6</code></pre>
 <pre><code>## Fit complete. Finishing gam object.
 ##           user.self sys.self elapsed
-## initial        0.45        0    0.45
-## gam.setup      0.02        0    0.02
-## pre-fit        0.00        0    0.00
-## fit            0.58        0    0.59
-## finalise       0.33        0    0.33
+## initial        0.49     0.00    0.48
+## gam.setup      0.01     0.00    0.02
+## pre-fit        0.00     0.00    0.00
+## fit            0.52     0.06    0.58
+## finalise       0.31     0.00    0.31
 ## simulation ID created for iteration 1 
 ## simulation ID created for iteration 2 
 ## simulation ID created for iteration 3 
@@ -285,43 +285,218 @@ simdata &lt;- PlasmodeBinSim(x = rhc, idVar = &quot;id&quot;, outcomeVar = &quot
 ## simulation ID created for iteration 17 
 ## simulation ID created for iteration 18 
 ## simulation ID created for iteration 19 
-## simulation ID created for iteration 20</code></pre>
+## simulation ID created for iteration 20 
+## simulation ID created for iteration 21 
+## simulation ID created for iteration 22 
+## simulation ID created for iteration 23 
+## simulation ID created for iteration 24 
+## simulation ID created for iteration 25 
+## simulation ID created for iteration 26 
+## simulation ID created for iteration 27 
+## simulation ID created for iteration 28 
+## simulation ID created for iteration 29 
+## simulation ID created for iteration 30 
+## simulation ID created for iteration 31 
+## simulation ID created for iteration 32 
+## simulation ID created for iteration 33 
+## simulation ID created for iteration 34 
+## simulation ID created for iteration 35 
+## simulation ID created for iteration 36 
+## simulation ID created for iteration 37 
+## simulation ID created for iteration 38 
+## simulation ID created for iteration 39 
+## simulation ID created for iteration 40 
+## simulation ID created for iteration 41 
+## simulation ID created for iteration 42 
+## simulation ID created for iteration 43 
+## simulation ID created for iteration 44 
+## simulation ID created for iteration 45 
+## simulation ID created for iteration 46 
+## simulation ID created for iteration 47 
+## simulation ID created for iteration 48 
+## simulation ID created for iteration 49 
+## simulation ID created for iteration 50 
+## simulation ID created for iteration 51 
+## simulation ID created for iteration 52 
+## simulation ID created for iteration 53 
+## simulation ID created for iteration 54 
+## simulation ID created for iteration 55 
+## simulation ID created for iteration 56 
+## simulation ID created for iteration 57 
+## simulation ID created for iteration 58 
+## simulation ID created for iteration 59 
+## simulation ID created for iteration 60 
+## simulation ID created for iteration 61 
+## simulation ID created for iteration 62 
+## simulation ID created for iteration 63 
+## simulation ID created for iteration 64 
+## simulation ID created for iteration 65 
+## simulation ID created for iteration 66 
+## simulation ID created for iteration 67 
+## simulation ID created for iteration 68 
+## simulation ID created for iteration 69 
+## simulation ID created for iteration 70 
+## simulation ID created for iteration 71 
+## simulation ID created for iteration 72 
+## simulation ID created for iteration 73 
+## simulation ID created for iteration 74 
+## simulation ID created for iteration 75 
+## simulation ID created for iteration 76 
+## simulation ID created for iteration 77 
+## simulation ID created for iteration 78 
+## simulation ID created for iteration 79 
+## simulation ID created for iteration 80 
+## simulation ID created for iteration 81 
+## simulation ID created for iteration 82 
+## simulation ID created for iteration 83 
+## simulation ID created for iteration 84 
+## simulation ID created for iteration 85 
+## simulation ID created for iteration 86 
+## simulation ID created for iteration 87 
+## simulation ID created for iteration 88 
+## simulation ID created for iteration 89 
+## simulation ID created for iteration 90 
+## simulation ID created for iteration 91 
+## simulation ID created for iteration 92 
+## simulation ID created for iteration 93 
+## simulation ID created for iteration 94 
+## simulation ID created for iteration 95 
+## simulation ID created for iteration 96 
+## simulation ID created for iteration 97 
+## simulation ID created for iteration 98 
+## simulation ID created for iteration 99 
+## simulation ID created for iteration 100</code></pre>
 <pre class="r"><code>saveOR &lt;- NULL
 for (i in 1:nSim){
   plasmodeData.i &lt;- join(data.frame(id=simdata[,i],EVENT=simdata[,i+nSim]), rhc, by=&quot;id&quot;, type=&quot;left&quot;)
-  estORx &lt;- exp(summary(glm(as.formula(paste0(&quot;EVENT&quot;, &quot;~&quot;, exposure, &quot;+&quot;, paste(vars, collapse = &quot;+&quot;))),
-                            family=binomial(link=&quot;logit&quot;),data=plasmodeData.i))$coef[exposure,&quot;Estimate&quot;])
+  estORx &lt;- tryCatch(exp(summary(glm(as.formula(paste0(&quot;EVENT&quot;, &quot;~&quot;, exposure, &quot;+&quot;, paste(vars, collapse = &quot;+&quot;))),
+                            family=binomial(link=&quot;logit&quot;),data=plasmodeData.i))$coef[exposure,&quot;Estimate&quot;]),
+                          error = function(e) { NA } )
   saveOR &lt;- c(estORx,saveOR)
   cat(&quot;iteration&quot;, i, &quot;has event rate =&quot;, round(table(plasmodeData.i$EVENT)[2]/length(plasmodeData.i$EVENT),2),
       &quot;exposure prevalence =&quot;, round(table(plasmodeData.i$swang1)[2]/length(plasmodeData.i$swang1),2),
       &quot;OR =&quot;, round(estORx,2),
-      &quot;cumulative OR=&quot;, round(mean(saveOR),2),&quot;\n&quot;)
+      &quot;cumulative mean OR=&quot;, round(mean(saveOR, na.rm = TRUE),2),&quot;\n&quot;)
 }</code></pre>
-<pre><code>## iteration 1 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.85 cumulative OR= 2.85 
-## iteration 2 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.37 cumulative OR= 3.11 
-## iteration 3 has event rate = 0.63 exposure prevalence = 0.38 OR = 3.56 cumulative OR= 3.26 
-## iteration 4 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.49 cumulative OR= 3.32 
-## iteration 5 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.62 cumulative OR= 3.38 
-## iteration 6 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.13 cumulative OR= 3.34 
-## iteration 7 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.34 cumulative OR= 3.2 
-## iteration 8 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.09 cumulative OR= 3.18 
-## iteration 9 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.06 cumulative OR= 3.17 
-## iteration 10 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.24 cumulative OR= 3.18 
-## iteration 11 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.73 cumulative OR= 3.23 
-## iteration 12 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.92 cumulative OR= 3.2 
-## iteration 13 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.04 cumulative OR= 3.19 
-## iteration 14 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.8 cumulative OR= 3.16 
-## iteration 15 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.03 cumulative OR= 3.15 
-## iteration 16 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.49 cumulative OR= 3.17 
-## iteration 17 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.63 cumulative OR= 3.2 
-## iteration 18 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.21 cumulative OR= 3.2 
-## iteration 19 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.96 cumulative OR= 3.19 
-## iteration 20 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative OR= 3.18</code></pre>
+<pre><code>## iteration 1 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.85 cumulative mean OR= 2.85 
+## iteration 2 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.37 cumulative mean OR= 3.11 
+## iteration 3 has event rate = 0.63 exposure prevalence = 0.38 OR = 3.56 cumulative mean OR= 3.26 
+## iteration 4 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.49 cumulative mean OR= 3.32 
+## iteration 5 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.62 cumulative mean OR= 3.38 
+## iteration 6 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.34 
+## iteration 7 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.34 cumulative mean OR= 3.2 
+## iteration 8 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.09 cumulative mean OR= 3.18 
+## iteration 9 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.06 cumulative mean OR= 3.17 
+## iteration 10 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.24 cumulative mean OR= 3.18 
+## iteration 11 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.73 cumulative mean OR= 3.23 
+## iteration 12 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.92 cumulative mean OR= 3.2 
+## iteration 13 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.04 cumulative mean OR= 3.19 
+## iteration 14 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.8 cumulative mean OR= 3.16 
+## iteration 15 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.03 cumulative mean OR= 3.15 
+## iteration 16 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.49 cumulative mean OR= 3.17 
+## iteration 17 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.63 cumulative mean OR= 3.2 
+## iteration 18 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.21 cumulative mean OR= 3.2 
+## iteration 19 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.96 cumulative mean OR= 3.19 
+## iteration 20 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.18 
+## iteration 21 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.18 
+## iteration 22 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.18 
+## iteration 23 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.33 cumulative mean OR= 3.19 
+## iteration 24 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.09 cumulative mean OR= 3.19 
+## iteration 25 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.18 
+## iteration 26 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.53 cumulative mean OR= 3.15 
+## iteration 27 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.14 
+## iteration 28 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.1 cumulative mean OR= 3.14 
+## iteration 29 has event rate = 0.63 exposure prevalence = 0.38 OR = 2.81 cumulative mean OR= 3.13 
+## iteration 30 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.12 
+## iteration 31 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.55 cumulative mean OR= 3.11 
+## iteration 32 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.74 cumulative mean OR= 3.09 
+## iteration 33 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.52 cumulative mean OR= 3.11 
+## iteration 34 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.34 cumulative mean OR= 3.11 
+## iteration 35 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.11 
+## iteration 36 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.1 
+## iteration 37 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.1 
+## iteration 38 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.6 cumulative mean OR= 3.09 
+## iteration 39 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.09 
+## iteration 40 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.92 cumulative mean OR= 3.08 
+## iteration 41 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.54 cumulative mean OR= 3.09 
+## iteration 42 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.46 cumulative mean OR= 3.1 
+## iteration 43 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.91 cumulative mean OR= 3.1 
+## iteration 44 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.81 cumulative mean OR= 3.11 
+## iteration 45 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.89 cumulative mean OR= 3.11 
+## iteration 46 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.11 
+## iteration 47 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.48 cumulative mean OR= 3.09 
+## iteration 48 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.58 cumulative mean OR= 3.08 
+## iteration 49 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.08 
+## iteration 50 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.46 cumulative mean OR= 3.09 
+## iteration 51 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.09 
+## iteration 52 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.08 
+## iteration 53 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.08 
+## iteration 54 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.72 cumulative mean OR= 3.08 
+## iteration 55 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.79 cumulative mean OR= 3.07 
+## iteration 56 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.55 cumulative mean OR= 3.08 
+## iteration 57 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.99 cumulative mean OR= 3.08 
+## iteration 58 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.74 cumulative mean OR= 3.07 
+## iteration 59 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.19 cumulative mean OR= 3.07 
+## iteration 60 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.48 cumulative mean OR= 3.08 
+## iteration 61 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.07 cumulative mean OR= 3.08 
+## iteration 62 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.54 cumulative mean OR= 3.07 
+## iteration 63 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.11 cumulative mean OR= 3.07 
+## iteration 64 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.35 cumulative mean OR= 3.08 
+## iteration 65 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.08 
+## iteration 66 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.08 
+## iteration 67 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.08 
+## iteration 68 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.36 cumulative mean OR= 3.08 
+## iteration 69 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.4 cumulative mean OR= 3.08 
+## iteration 70 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.26 cumulative mean OR= 3.09 
+## iteration 71 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.43 cumulative mean OR= 3.09 
+## iteration 72 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.86 cumulative mean OR= 3.09 
+## iteration 73 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.1 cumulative mean OR= 3.09 
+## iteration 74 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.77 cumulative mean OR= 3.08 
+## iteration 75 has event rate = 0.65 exposure prevalence = 0.38 OR = NA cumulative mean OR= 3.08 
+## iteration 76 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.76 cumulative mean OR= 3.08 
+## iteration 77 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.57 cumulative mean OR= 3.07 
+## iteration 78 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.76 cumulative mean OR= 3.08 
+## iteration 79 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.96 cumulative mean OR= 3.09 
+## iteration 80 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.14 cumulative mean OR= 3.09 
+## iteration 81 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.42 cumulative mean OR= 3.09 
+## iteration 82 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.09 
+## iteration 83 has event rate = 0.67 exposure prevalence = 0.38 OR = 2.93 cumulative mean OR= 3.08 
+## iteration 84 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.27 cumulative mean OR= 3.09 
+## iteration 85 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.93 cumulative mean OR= 3.08 
+## iteration 86 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.05 cumulative mean OR= 3.08 
+## iteration 87 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.08 
+## iteration 88 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.22 cumulative mean OR= 3.07 
+## iteration 89 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.3 cumulative mean OR= 3.08 
+## iteration 90 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.97 cumulative mean OR= 3.07 
+## iteration 91 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.52 cumulative mean OR= 3.08 
+## iteration 92 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.69 cumulative mean OR= 3.09 
+## iteration 93 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.09 
+## iteration 94 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.76 cumulative mean OR= 3.08 
+## iteration 95 has event rate = 0.66 exposure prevalence = 0.38 OR = 3 cumulative mean OR= 3.08 
+## iteration 96 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.51 cumulative mean OR= 3.09 
+## iteration 97 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.78 cumulative mean OR= 3.09 
+## iteration 98 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.04 cumulative mean OR= 3.09 
+## iteration 99 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.05 cumulative mean OR= 3.09 
+## iteration 100 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.09</code></pre>
+<pre class="r"><code>saveOR</code></pre>
+<pre><code>##   [1] 3.116389 3.052043 3.041440 3.778697 3.513088 3.004887 2.757144 2.977984
+##   [9] 3.693771 3.522231 2.974371 3.296288 2.223328 2.978138 3.049047 2.926363
+##  [17] 3.269424 2.934828 3.133950 2.415901 3.136870 3.957359 3.756590 2.573702
+##  [25] 2.758782       NA 2.771256 3.099263 2.857711 3.431961 3.260498 3.396493
+##  [33] 3.361261 3.079805 2.900027 3.130607 3.347959 3.110662 2.541194 3.067906
+##  [41] 3.477369 3.188187 2.744499 2.989039 3.553685 2.791325 2.723181 3.076010
+##  [49] 2.951909 3.023449 3.461282 2.951733 2.580050 2.480530 3.023480 2.885399
+##  [57] 3.813889 2.909633 3.461877 3.536785 2.917314 2.984866 2.597254 3.012944
+##  [65] 2.897764 2.983821 3.342910 3.520479 2.742628 2.550132 2.898484 2.810064
+##  [73] 3.097758 2.903347 2.525524 3.021640 3.088197 3.328538 3.232875 3.229226
+##  [81] 3.005438 2.959654 3.209048 3.628170 3.494277 3.032090 2.797617 3.039958
+##  [89] 2.922484 3.728950 3.243661 3.057625 3.090196 2.340216 3.130956 3.623043
+##  [97] 3.487225 3.562509 3.373243 2.850568</code></pre>
 <pre class="r"><code>rm(simdata)</code></pre>
 </div>
 <div id="package" class="section level1">
 <h1>Package</h1>
-<pre class="r"><code>nSim &lt;- 20
+<pre class="r"><code>nSim &lt;- 100
 formulaOut &lt;- as.formula(paste0(&quot;death ~ swang1 +&quot;, paste(vars, collapse = &quot;+&quot;)))
 #fity &lt;- glm(paste0(&quot;death ~ swang1 +&quot;, paste(vars, collapse = &quot;+&quot;)), family = binomial, data = rhc)
 simdata.obj &lt;- PlasmodeBin(formulaOut,
@@ -342,34 +517,129 @@ simdata.obj &lt;- PlasmodeBin(formulaOut,
 saveOR &lt;- NULL
 for (i in 1:nSim){
   plasmodeData.i &lt;- join(data.frame(id=simdata[,i],EVENT=simdata[,i+nSim]), rhc, by=&quot;id&quot;, type=&quot;left&quot;)
-  estORx &lt;- exp(summary(glm(as.formula(paste0(&quot;EVENT&quot;, &quot;~&quot;, exposure, &quot;+&quot;, paste(vars, collapse = &quot;+&quot;))),
-                            family=binomial(link=&quot;logit&quot;),data=plasmodeData.i))$coef[exposure,&quot;Estimate&quot;])
+  estORx &lt;- tryCatch(exp(summary(glm(as.formula(paste0(&quot;EVENT&quot;, &quot;~&quot;, exposure, &quot;+&quot;, paste(vars, collapse = &quot;+&quot;))),
+                            family=binomial(link=&quot;logit&quot;),data=plasmodeData.i))$coef[exposure,&quot;Estimate&quot;]),
+                          error = function(e) { NA } )
   saveOR &lt;- c(estORx,saveOR)
   cat(&quot;iteration&quot;, i, &quot;has event rate =&quot;, round(table(plasmodeData.i$EVENT)[2]/length(plasmodeData.i$EVENT),2),
       &quot;exposure prevalence =&quot;, round(table(plasmodeData.i$swang1)[2]/length(plasmodeData.i$swang1),2),
       &quot;OR =&quot;, round(estORx,2),
-      &quot;cumulative OR=&quot;, round(mean(saveOR),2),&quot;\n&quot;)
+      &quot;cumulative mean OR=&quot;, round(mean(saveOR, na.rm = TRUE),2),&quot;\n&quot;)
 }</code></pre>
-<pre><code>## iteration 1 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.23 cumulative OR= 3.23 
-## iteration 2 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative OR= 3.23 
-## iteration 3 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.33 cumulative OR= 3.26 
-## iteration 4 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.09 cumulative OR= 3.22 
-## iteration 5 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.02 cumulative OR= 3.18 
-## iteration 6 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.53 cumulative OR= 3.07 
-## iteration 7 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative OR= 3.05 
-## iteration 8 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.1 cumulative OR= 3.05 
-## iteration 9 has event rate = 0.63 exposure prevalence = 0.38 OR = 2.81 cumulative OR= 3.03 
-## iteration 10 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative OR= 3.01 
-## iteration 11 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.55 cumulative OR= 2.97 
-## iteration 12 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.74 cumulative OR= 2.95 
-## iteration 13 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.52 cumulative OR= 3 
-## iteration 14 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.34 cumulative OR= 3.02 
-## iteration 15 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative OR= 3.02 
-## iteration 16 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.9 cumulative OR= 3.01 
-## iteration 17 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative OR= 3.01 
-## iteration 18 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.6 cumulative OR= 2.99 
-## iteration 19 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.98 cumulative OR= 2.99 
-## iteration 20 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.92 cumulative OR= 2.98</code></pre>
+<pre><code>## iteration 1 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.21 cumulative mean OR= 3.21 
+## iteration 2 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.14 
+## iteration 3 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.59 cumulative mean OR= 3.29 
+## iteration 4 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.43 cumulative mean OR= 3.33 
+## iteration 5 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.26 
+## iteration 6 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.79 cumulative mean OR= 3.19 
+## iteration 7 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.15 
+## iteration 8 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.53 cumulative mean OR= 3.07 
+## iteration 9 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.17 cumulative mean OR= 3.09 
+## iteration 10 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.83 cumulative mean OR= 3.06 
+## iteration 11 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.33 cumulative mean OR= 3.08 
+## iteration 12 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.57 cumulative mean OR= 3.04 
+## iteration 13 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.42 cumulative mean OR= 3.07 
+## iteration 14 has event rate = 0.64 exposure prevalence = 0.38 OR = 3 cumulative mean OR= 3.07 
+## iteration 15 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.74 cumulative mean OR= 3.04 
+## iteration 16 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.03 
+## iteration 17 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.16 cumulative mean OR= 3.04 
+## iteration 18 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.04 cumulative mean OR= 3.04 
+## iteration 19 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.34 cumulative mean OR= 3.06 
+## iteration 20 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.03 cumulative mean OR= 3.06 
+## iteration 21 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.06 
+## iteration 22 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.05 
+## iteration 23 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.69 cumulative mean OR= 3.08 
+## iteration 24 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.81 cumulative mean OR= 3.07 
+## iteration 25 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.14 cumulative mean OR= 3.07 
+## iteration 26 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.28 cumulative mean OR= 3.08 
+## iteration 27 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.08 
+## iteration 28 has event rate = 0.65 exposure prevalence = 0.38 OR = NA cumulative mean OR= 3.08 
+## iteration 29 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.4 cumulative mean OR= 3.09 
+## iteration 30 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.17 cumulative mean OR= 3.1 
+## iteration 31 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.1 
+## iteration 32 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.78 cumulative mean OR= 3.09 
+## iteration 33 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.94 cumulative mean OR= 3.08 
+## iteration 34 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.4 cumulative mean OR= 3.09 
+## iteration 35 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.97 cumulative mean OR= 3.09 
+## iteration 36 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.08 
+## iteration 37 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.94 cumulative mean OR= 3.08 
+## iteration 38 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.14 cumulative mean OR= 3.08 
+## iteration 39 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.06 cumulative mean OR= 3.08 
+## iteration 40 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.8 cumulative mean OR= 3.07 
+## iteration 41 has event rate = 0.64 exposure prevalence = 0.38 OR = 4.05 cumulative mean OR= 3.1 
+## iteration 42 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.09 
+## iteration 43 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.24 cumulative mean OR= 3.1 
+## iteration 44 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.67 cumulative mean OR= 3.09 
+## iteration 45 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.06 cumulative mean OR= 3.09 
+## iteration 46 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.97 cumulative mean OR= 3.08 
+## iteration 47 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.96 cumulative mean OR= 3.08 
+## iteration 48 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.08 
+## iteration 49 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.87 cumulative mean OR= 3.08 
+## iteration 50 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.09 cumulative mean OR= 3.08 
+## iteration 51 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.3 cumulative mean OR= 3.08 
+## iteration 52 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.08 
+## iteration 53 has event rate = 0.66 exposure prevalence = 0.38 OR = NA cumulative mean OR= 3.08 
+## iteration 54 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.28 cumulative mean OR= 3.09 
+## iteration 55 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.09 
+## iteration 56 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.72 cumulative mean OR= 3.08 
+## iteration 57 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.17 cumulative mean OR= 3.08 
+## iteration 58 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.78 cumulative mean OR= 3.08 
+## iteration 59 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.92 cumulative mean OR= 3.07 
+## iteration 60 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.08 
+## iteration 61 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.07 
+## iteration 62 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.24 cumulative mean OR= 3.08 
+## iteration 63 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.56 cumulative mean OR= 3.08 
+## iteration 64 has event rate = 0.68 exposure prevalence = 0.38 OR = 2.66 cumulative mean OR= 3.08 
+## iteration 65 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.76 cumulative mean OR= 3.07 
+## iteration 66 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.44 cumulative mean OR= 3.08 
+## iteration 67 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.5 cumulative mean OR= 3.08 
+## iteration 68 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.37 cumulative mean OR= 3.09 
+## iteration 69 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.58 cumulative mean OR= 3.1 
+## iteration 70 has event rate = 0.67 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.09 
+## iteration 71 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.93 cumulative mean OR= 3.11 
+## iteration 72 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.7 cumulative mean OR= 3.1 
+## iteration 73 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.65 cumulative mean OR= 3.11 
+## iteration 74 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.11 
+## iteration 75 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.83 cumulative mean OR= 3.12 
+## iteration 76 has event rate = 0.63 exposure prevalence = 0.38 OR = 3.52 cumulative mean OR= 3.12 
+## iteration 77 has event rate = 0.66 exposure prevalence = 0.38 OR = 2.6 cumulative mean OR= 3.12 
+## iteration 78 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.5 cumulative mean OR= 3.12 
+## iteration 79 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.26 cumulative mean OR= 3.12 
+## iteration 80 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.64 cumulative mean OR= 3.13 
+## iteration 81 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.88 cumulative mean OR= 3.13 
+## iteration 82 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.86 cumulative mean OR= 3.12 
+## iteration 83 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.3 cumulative mean OR= 3.13 
+## iteration 84 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.2 cumulative mean OR= 3.13 
+## iteration 85 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.19 cumulative mean OR= 3.13 
+## iteration 86 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.88 cumulative mean OR= 3.12 
+## iteration 87 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.68 cumulative mean OR= 3.13 
+## iteration 88 has event rate = 0.64 exposure prevalence = 0.38 OR = 4.16 cumulative mean OR= 3.14 
+## iteration 89 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.96 cumulative mean OR= 3.14 
+## iteration 90 has event rate = 0.65 exposure prevalence = 0.38 OR = 2.73 cumulative mean OR= 3.14 
+## iteration 91 has event rate = 0.66 exposure prevalence = 0.38 OR = NA cumulative mean OR= 3.14 
+## iteration 92 has event rate = 0.66 exposure prevalence = 0.38 OR = 3.65 cumulative mean OR= 3.14 
+## iteration 93 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.14 
+## iteration 94 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.44 cumulative mean OR= 3.14 
+## iteration 95 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.43 cumulative mean OR= 3.15 
+## iteration 96 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.15 
+## iteration 97 has event rate = 0.64 exposure prevalence = 0.38 OR = 2.81 cumulative mean OR= 3.14 
+## iteration 98 has event rate = 0.64 exposure prevalence = 0.38 OR = 3.27 cumulative mean OR= 3.14 
+## iteration 99 has event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.14 
+## iteration 100 has event rate = 0.67 exposure prevalence = 0.38 OR = 3.48 cumulative mean OR= 3.15</code></pre>
+<pre class="r"><code>saveOR</code></pre>
+<pre><code>##   [1] 3.483291 3.232777 3.268951 2.808079 2.983919 3.433559 3.438446 3.081650
+##   [9] 3.649614       NA 2.727113 2.963765 4.164845 3.676250 2.876637 3.188792
+##  [17] 3.198022 3.302704 2.861463 2.881543 3.635424 3.258581 3.502556 2.604922
+##  [25] 3.516379 3.834280 3.122192 3.653864 2.697406 3.934069 2.898145 3.575555
+##  [33] 3.365993 3.497488 3.444147 2.763276 2.658450 3.555622 3.237201 3.007927
+##  [41] 3.121246 2.915747 2.777739 3.174767 2.717875 3.121984 3.283039       NA
+##  [49] 3.011349 3.297614 3.094057 2.874864 3.232620 2.963485 2.974677 3.060723
+##  [57] 2.673233 3.240237 2.902033 4.052484 2.804144 3.058963 3.137525 2.944309
+##  [65] 2.949418 2.970447 3.401846 2.942734 2.781911 3.116563 3.172696 3.397363
+##  [73]       NA 3.120981 3.276732 3.142761 2.805383 3.690378 2.895066 3.124119
+##  [81] 3.034078 3.335296 3.043504 3.163056 2.899503 2.736847 3.001904 3.422144
+##  [89] 2.569912 3.325884 2.829715 3.170471 2.534555 2.952340 2.792211 3.017574
+##  [97] 3.434997 3.585020 3.075574 3.206974</code></pre>
 </div>
 
 

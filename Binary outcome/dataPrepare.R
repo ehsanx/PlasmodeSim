@@ -1,5 +1,6 @@
 rm(list=ls(all=TRUE))
 library(plyr) 
+library(Publish) 
 library(stringr)
 library(mgcv)
 setwd("~/GitHub/PlasmodeSimBinary/Binary outcome")
@@ -40,15 +41,13 @@ cat("Original data", "has event rate =", Yr,
     "OR =", estOR,"\n")
 rhc <- rhcX
 
-save(rhc, exposure, outcome, vars, RHScov, Oformula, Yr, Er, file = "rhcX.RData")
+#save(rhc, exposure, outcome, vars, RHScov, Oformula, Yr, Er, file = "rhcX.RData")
 
-# rhc$age.cat <- as.factor(ifelse(rhc$age > 70, 1, 0))
-# table(rhc$age.cat)
-# vars[1] <- "age.cat"
 effect.mod <- "sex"
 vars <- vars[!(vars %in% effect.mod)]
 RHScov = paste0(vars, collapse = "+")
 Oformula.int = as.formula(paste0(outcome, "~", exposure, "+", RHScov, "+", effect.mod, "*", exposure))
 glm.int<- glm(Oformula.int,family=binomial(link="logit"),data= rhc) 
+summary(glm.int)
 publish(glm.int)
 

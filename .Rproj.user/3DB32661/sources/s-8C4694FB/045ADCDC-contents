@@ -1,0 +1,278 @@
+@article{keele2021comparing,
+  title={Comparing covariate prioritization via matching to machine learning methods for causal inference using five empirical applications},
+  author={Keele, Luke and Small, Dylan S},
+  journal={The American Statistician},
+  pages={1--9},
+  year={2021},
+  publisher={Taylor \& Francis}
+}
+
+@article{nguyen2017double,
+  title={Double-adjustment in propensity score matching analysis: choosing a threshold for considering residual imbalance},
+  author={Nguyen, Tri-Long and Collins, Gary S and Spence, Jessica and Daur{\`e}s, Jean-Pierre and Devereaux, PJ and Landais, Paul and Le Manach, Yannick},
+  journal={BMC medical research methodology},
+  volume={17},
+  number={1},
+  pages={1--8},
+  year={2017},
+  publisher={Springer}
+}
+
+@article{alam2019should,
+  title={Should a propensity score model be super? the utility of ensemble procedures for causal adjustment},
+  author={Alam, Shomoita and Moodie, Erica EM and Stephens, David A},
+  journal={Statistics in medicine},
+  volume={38},
+  number={9},
+  pages={1690--1702},
+  year={2019},
+  publisher={Wiley Online Library}
+}
+
+@article{keele2018pre,
+  title={Pre-analysis Plan for a Comparison of Matching and Black Box-based Covariate Adjustment},
+  author={Keele, Luke and Small, Dylan S},
+  journal={Observational Studies},
+  volume={4},
+  number={1},
+  pages={97--110},
+  year={2018},
+  publisher={University of Pennsylvania Press}
+}
+
+
+@article{austin2011tutorial,
+  title={A tutorial and case study in propensity score analysis: an application to estimating the effect of in-hospital smoking cessation counseling on mortality},
+  author={Austin, Peter C},
+  journal={Multivariate behavioral research},
+  volume={46},
+  number={1},
+  pages={119--151},
+  year={2011},
+  publisher={Taylor \& Francis}
+}
+
+@article{connors1996effectiveness,
+  title={The effectiveness of right heart catheterization in the initial care of critically III patients},
+  author={Connors, Alfred F and Speroff, Theodore and Dawson, Neal V and Thomas, Charles and Harrell, Frank E and Wagner, Douglas and Desbiens, Norman and Goldman, Lee and Wu, Albert W and Califf, Robert M and others},
+  journal={Jama},
+  volume={276},
+  number={11},
+  pages={889--897},
+  year={1996},
+  url = {\url{https://tinyurl.com/Connors1996}},
+  publisher={American Medical Association}
+}
+
+@article{gruber2012tmle,
+  title={tmle: An R package for targeted maximum likelihood estimation},
+  author={Gruber, Susan and van der Laan, Mark},
+  journal={Journal of Statistical Software},
+  volume={51},
+  number={1},
+  pages={1--35},
+  year={2012}
+}
+
+@article{gruber2010targeted,
+  title={A targeted maximum likelihood estimator of a causal effect on a bounded continuous outcome},
+  author={Gruber, Susan and van der Laan, Mark J},
+  journal={The International Journal of Biostatistics},
+  volume={6},
+  number={1},
+  year={2010},
+  publisher={De Gruyter}
+}
+
+@article{luque2018targeted,
+  title={Targeted maximum likelihood estimation for a binary treatment: A tutorial},
+  author={Luque-Fernandez, Miguel Angel and Schomaker, Michael and Rachet, Bernard and Schnitzer, Mireille E},
+  journal={Statistics in medicine},
+  volume={37},
+  number={16},
+  pages={2530--2546},
+  year={2018},
+  publisher={Wiley Online Library}
+}
+
+@book{van2012targeted,
+      title     = "Targeted learning",
+      author    = "van der Laan, Mark J and Petersen, Maya L",
+      year      = 2012,
+      publisher = "Springer",
+      address   = "NY"
+}
+
+@article{gruber2009targeted,
+  title={Targeted maximum likelihood estimation: A gentle introduction},
+  author={Gruber, Susan and Van Der Laan, Mark J},
+  year={2009},
+  publisher={bepress}
+}
+
+@article{naimi2018stacked,
+  title={Stacked generalization: an introduction to super learning},
+  author={Naimi, Ashley I and Balzer, Laura B},
+  journal={European journal of epidemiology},
+  volume={33},
+  number={5},
+  pages={459--464},
+  year={2018},
+  publisher={Springer}
+}
+
+@article{rose2013mortality,
+  title={Mortality risk score prediction in an elderly population using machine learning},
+  author={Rose, Sherri},
+  journal={American journal of epidemiology},
+  volume={177},
+  number={5},
+  pages={443--452},
+  year={2013},
+  publisher={Oxford University Press}
+}
+
+@article{pirracchio2015improving,
+  title={Improving propensity score estimators' robustness to model misspecification using super learner},
+  author={Pirracchio, Romain and Petersen, Maya L and Van Der Laan, Mark},
+  journal={American journal of epidemiology},
+  volume={181},
+  number={2},
+  pages={108--119},
+  year={2015},
+  publisher={Oxford University Press}
+}
+
+@article{schuler2017targeted,
+  title={Targeted maximum likelihood estimation for causal inference in observational studies},
+  author={Schuler, Megan S and Rose, Sherri},
+  journal={American journal of epidemiology},
+  volume={185},
+  number={1},
+  pages={65--73},
+  year={2017},
+  publisher={Oxford University Press}
+}
+
+@article{naimi2017introduction,
+  title={An introduction to g methods},
+  author={Naimi, Ashley I and Cole, Stephen R and Kennedy, Edward H},
+  journal={International journal of epidemiology},
+  volume={46},
+  number={2},
+  pages={756--762},
+  year={2017},
+  publisher={Oxford University Press}
+}
+
+@article{zhong2021aipw,
+  title={AIPW: An R Package for Augmented Inverse Probability Weighted Estimation of Average Causal Effects},
+  author={Zhong, Yongqi and Kennedy, Edward H and Bodnar, Lisa M and Naimi, Ashley I},
+  journal={American Journal of Epidemiology},
+  year={2021}
+}
+
+@article{snowden2011implementation,
+  title={Implementation of G-computation on a simulated data set: demonstration of a causal inference technique},
+  author={Snowden, Jonathan M and Rose, Sherri and Mortimer, Kathleen M},
+  journal={American journal of epidemiology},
+  volume={173},
+  number={7},
+  pages={731--738},
+  year={2011},
+  publisher={Oxford University Press}
+}
+
+@article{austin2015moving,
+  title={Moving towards best practice when using inverse probability of treatment weighting (IPTW) using the propensity score to estimate causal treatment effects in observational studies},
+  author={Austin, Peter C and Stuart, Elizabeth A},
+  journal={Statistics in medicine},
+  volume={34},
+  number={28},
+  pages={3661--3679},
+  year={2015},
+  publisher={Wiley Online Library}
+}
+
+@article{rose2020intersections,
+  title={Intersections of machine learning and epidemiological methods for health services research},
+  author={Rose, Sherri},
+  journal={International journal of epidemiology},
+  volume={49},
+  number={6},
+  pages={1763--1770},
+  year={2020},
+  publisher={Oxford University Press}
+}
+
+@article{naimi2017challenges,
+  title={Challenges in obtaining valid causal effect estimates with machine learning algorithms},
+  author={Naimi, Ashley I and Mishler, Alan E and Kennedy, Edward H},
+  journal={arXiv preprint arXiv:1711.07137},
+  year={2017}
+}
+
+@article{balzer2021demystifying,
+  title={Demystifying Statistical Inference When Using Machine Learning in Causal Research},
+  author={Balzer, Laura B and Westling, Ted},
+  journal={American Journal of Epidemiology},
+  year={2021}
+}
+
+@manual{tmlePkgDocs,
+  title={Package 'tmle'},
+  author={Gruber, S. and Van Der Laan, M. and Kennedy, C.},
+  year={2020},
+  url={https://cran.r-project.org/web/packages/tmle/tmle.pdf}
+}
+
+@manual{coyle2021sl3,
+  author = {Coyle, Jeremy R and Hejazi, Nima S and Malenica, Ivana and
+  Sofrygin, Oleg},
+  title = {{sl3}: Modern Pipelines for Machine Learning and {Super
+    Learning}},
+  year = {2021},
+  howpublished = {\url{https://github.com/tlverse/sl3}},
+  note = {{R} package version 1.4.2},
+  url = {https://doi.org/10.5281/zenodo.1342293},
+  doi = {10.5281/zenodo.1342293}
+}
+
+@book{coyle2021tlverse,
+  author = {Coyle, Jeremy R and Hejazi, Nima S and Melencia, Ivana and Phillips, Rachael and Hubbard, Alex},
+  title = {Targeted Learning in {R}: Causal Data Science with the {tlverse} Software Ecosystem},
+  year = {2021},
+  howpublished = {\url{https://github.com/tlverse/tlverse-handbook}},
+  url = {https://tlverse.org/tlverse-handbook/}
+}
+
+@Article{Zhong2021AIPW,
+  title = {AIPW: An R Package for Augmented Inverse Probability
+    Weighted Estimation of Average Causal Effects},
+  author = {{Yongqi Zhong} and {Edward H. Kennedy} and {Lisa M.
+    Bodnar} and {Ashley I. Naimi}},
+  journal = {American Journal of Epidemiology},
+  year = {2021},
+  note = {In Press},
+}
+
+@Article{Lendle2017ltmle,
+  title = {{ltmle}: An {R} Package Implementing Targeted Minimum Loss-Based Estimation for Longitudinal Data},
+  author = {Lendle, Samuel D. and Schwab, Joshua and Petersen, Maya L. and van der Laan, Mark J.},
+  journal = {Journal of Statistical Software},
+  year = {2017},
+  volume = {81},
+  number = {1},
+  pages = {1-21},
+  doi = {10.18637/jss.v081.i01}
+}
+
+@software{coyle2021tmle3-rpkg,
+  author = {Coyle, Jeremy R},
+  title = {{tmle3}: The Extensible {TMLE} Framework},
+  year = {2021},
+  howpublished = {\url{https://github.com/tlverse/tmle3}},
+  note = {{R} package version 0.2.0},
+  url = {https://doi.org/10.5281/zenodo.4603358},
+  doi = {10.5281/zenodo.4603358}
+}

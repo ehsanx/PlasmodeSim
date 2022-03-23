@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 User-written Function | Understanding Plasmode Simulation</title>
+  <meta name="description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 User-written Function | Understanding Plasmode Simulation" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  <meta name="github-repo" content="ehsanx/PlasmodeSim" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 User-written Function | Understanding Plasmode Simulation" />
+  
+  <meta name="twitter:description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  
+
+<meta name="author" content="Ehsan Karim" />
+
+
+<meta name="date" content="2022-03-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="package.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script type="text/javascript">
+
+// toggle visibility of R source blocks in R Markdown output
+function toggle_R() {
+  var x = document.getElementsByClassName('r');
+  if (x.length == 0) return;
+  function toggle_vis(o) {
+    var d = o.style.display;
+    o.style.display = (d == 'block' || d == '') ? 'none':'block';
+  }
+
+  for (i = 0; i < x.length; i++) {
+    var y = x[i];
+    if (y.tagName.toLowerCase() === 'pre') toggle_vis(y);
+  }
+
+    var elem = document.getElementById("myButton1");
+    if (elem.value === "Hide Global") elem.value = "Show Global";
+    else elem.value = "Hide Global";
+}
+
+document.write('<input onclick="toggle_R();" type="button" value="Hide Global" id="myButton1" style="position: absolute; top: 10%; right: 2%; z-index: 200"></input>')
+
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Plasmode simulation</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data load</a></li>
+<li class="chapter" data-level="2" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>2</b> User-written Function</a></li>
+<li class="chapter" data-level="3" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>3</b> Package</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://ehsank.com/" target="blank">Contact</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Understanding Plasmode Simulation</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="user-written-function" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> User-written Function</h1>
+<p>See <span class="citation"><a href="#ref-franklin2015regularized" role="doc-biblioref">Franklin et al.</a> (<a href="#ref-franklin2015regularized" role="doc-biblioref">2015</a>)</span></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="user-written-function.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plasmode simulation</span></span>
+<span id="cb7-2"><a href="user-written-function.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions/PlasmodeSim.R&quot;</span>)</span>
+<span id="cb7-3"><a href="user-written-function.html#cb7-3" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb7-4"><a href="user-written-function.html#cb7-4" aria-hidden="true" tabindex="-1"></a>simdata <span class="ot">&lt;-</span> <span class="fu">PlasmodeBinSim</span>(<span class="at">x =</span> rhc, </span>
+<span id="cb7-5"><a href="user-written-function.html#cb7-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">idVar =</span> <span class="st">&quot;id&quot;</span>, </span>
+<span id="cb7-6"><a href="user-written-function.html#cb7-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">outcomeVar =</span> <span class="st">&quot;death&quot;</span>, </span>
+<span id="cb7-7"><a href="user-written-function.html#cb7-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">treatVar =</span> <span class="st">&quot;swang1&quot;</span>, </span>
+<span id="cb7-8"><a href="user-written-function.html#cb7-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">treatLabel =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb7-9"><a href="user-written-function.html#cb7-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">form =</span> <span class="fu">paste0</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>), </span>
+<span id="cb7-10"><a href="user-written-function.html#cb7-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">effectOR =</span> <span class="dv">3</span>, </span>
+<span id="cb7-11"><a href="user-written-function.html#cb7-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">MM =</span> <span class="dv">1</span>, </span>
+<span id="cb7-12"><a href="user-written-function.html#cb7-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">nsim =</span> nSim, </span>
+<span id="cb7-13"><a href="user-written-function.html#cb7-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">size =</span> <span class="dv">3000</span>, </span>
+<span id="cb7-14"><a href="user-written-function.html#cb7-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">eventRate =</span> <span class="fl">0.65</span>, </span>
+<span id="cb7-15"><a href="user-written-function.html#cb7-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">exposedPrev =</span> <span class="fl">0.38</span>)</span></code></pre></div>
+<pre><code>## Setup complete. Calling fit</code></pre>
+<pre><code>## Deviance = 3299.71337102193 Iterations - 1</code></pre>
+<pre><code>## Deviance = 6096.41310065475 Iterations - 2</code></pre>
+<pre><code>## Deviance = 6052.40572812184 Iterations - 3</code></pre>
+<pre><code>## Deviance = 6051.24990537168 Iterations - 4</code></pre>
+<pre><code>## Deviance = 6051.24785516408 Iterations - 5</code></pre>
+<pre><code>## Deviance = 6051.24785515008 Iterations - 6</code></pre>
+<pre><code>## Fit complete. Finishing gam object.
+##           user.self sys.self elapsed
+## initial        0.03     0.00    0.03
+## gam.setup      0.02     0.00    0.01
+## pre-fit        0.00     0.00    0.00
+## fit            0.27     0.01    0.28
+## finalise       0.00     0.02    0.02
+## simulation ID created for iteration 1 
+## simulation ID created for iteration 2 
+## simulation ID created for iteration 3 
+## simulation ID created for iteration 4 
+## simulation ID created for iteration 5 
+## simulation ID created for iteration 6 
+## simulation ID created for iteration 7 
+## simulation ID created for iteration 8 
+## simulation ID created for iteration 9 
+## simulation ID created for iteration 10 
+## simulation ID created for iteration 11 
+## simulation ID created for iteration 12 
+## simulation ID created for iteration 13 
+## simulation ID created for iteration 14 
+## simulation ID created for iteration 15 
+## simulation ID created for iteration 16 
+## simulation ID created for iteration 17 
+## simulation ID created for iteration 18 
+## simulation ID created for iteration 19 
+## simulation ID created for iteration 20 
+## simulation ID created for iteration 21 
+## simulation ID created for iteration 22 
+## simulation ID created for iteration 23 
+## simulation ID created for iteration 24 
+## simulation ID created for iteration 25 
+## simulation ID created for iteration 26 
+## simulation ID created for iteration 27 
+## simulation ID created for iteration 28 
+## simulation ID created for iteration 29 
+## simulation ID created for iteration 30 
+## simulation ID created for iteration 31 
+## simulation ID created for iteration 32 
+## simulation ID created for iteration 33 
+## simulation ID created for iteration 34 
+## simulation ID created for iteration 35 
+## simulation ID created for iteration 36 
+## simulation ID created for iteration 37 
+## simulation ID created for iteration 38 
+## simulation ID created for iteration 39 
+## simulation ID created for iteration 40 
+## simulation ID created for iteration 41 
+## simulation ID created for iteration 42 
+## simulation ID created for iteration 43 
+## simulation ID created for iteration 44 
+## simulation ID created for iteration 45 
+## simulation ID created for iteration 46 
+## simulation ID created for iteration 47 
+## simulation ID created for iteration 48 
+## simulation ID created for iteration 49 
+## simulation ID created for iteration 50 
+## simulation ID created for iteration 51 
+## simulation ID created for iteration 52 
+## simulation ID created for iteration 53 
+## simulation ID created for iteration 54 
+## simulation ID created for iteration 55 
+## simulation ID created for iteration 56 
+## simulation ID created for iteration 57 
+## simulation ID created for iteration 58 
+## simulation ID created for iteration 59 
+## simulation ID created for iteration 60 
+## simulation ID created for iteration 61 
+## simulation ID created for iteration 62 
+## simulation ID created for iteration 63 
+## simulation ID created for iteration 64 
+## simulation ID created for iteration 65 
+## simulation ID created for iteration 66 
+## simulation ID created for iteration 67 
+## simulation ID created for iteration 68 
+## simulation ID created for iteration 69 
+## simulation ID created for iteration 70 
+## simulation ID created for iteration 71 
+## simulation ID created for iteration 72 
+## simulation ID created for iteration 73 
+## simulation ID created for iteration 74 
+## simulation ID created for iteration 75 
+## simulation ID created for iteration 76 
+## simulation ID created for iteration 77 
+## simulation ID created for iteration 78 
+## simulation ID created for iteration 79 
+## simulation ID created for iteration 80 
+## simulation ID created for iteration 81 
+## simulation ID created for iteration 82 
+## simulation ID created for iteration 83 
+## simulation ID created for iteration 84 
+## simulation ID created for iteration 85 
+## simulation ID created for iteration 86 
+## simulation ID created for iteration 87 
+## simulation ID created for iteration 88 
+## simulation ID created for iteration 89 
+## simulation ID created for iteration 90 
+## simulation ID created for iteration 91 
+## simulation ID created for iteration 92 
+## simulation ID created for iteration 93 
+## simulation ID created for iteration 94 
+## simulation ID created for iteration 95 
+## simulation ID created for iteration 96 
+## simulation ID created for iteration 97 
+## simulation ID created for iteration 98 
+## simulation ID created for iteration 99 
+## simulation ID created for iteration 100</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="user-written-function.html#cb16-1" aria-hidden="true" tabindex="-1"></a>saveOR <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb16-2"><a href="user-written-function.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nSim){</span>
+<span id="cb16-3"><a href="user-written-function.html#cb16-3" aria-hidden="true" tabindex="-1"></a>  plasmodeData.i <span class="ot">&lt;-</span> <span class="fu">join</span>(<span class="fu">data.frame</span>(<span class="at">id=</span>simdata[,i],</span>
+<span id="cb16-4"><a href="user-written-function.html#cb16-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">EVENT=</span>simdata[,i<span class="sc">+</span>nSim]), </span>
+<span id="cb16-5"><a href="user-written-function.html#cb16-5" aria-hidden="true" tabindex="-1"></a>                         rhc, <span class="at">by=</span><span class="st">&quot;id&quot;</span>, </span>
+<span id="cb16-6"><a href="user-written-function.html#cb16-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">type=</span><span class="st">&quot;left&quot;</span>)</span>
+<span id="cb16-7"><a href="user-written-function.html#cb16-7" aria-hidden="true" tabindex="-1"></a>  estORx <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">exp</span>(<span class="fu">summary</span>(<span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;EVENT&quot;</span>, <span class="st">&quot;~&quot;</span>, </span>
+<span id="cb16-8"><a href="user-written-function.html#cb16-8" aria-hidden="true" tabindex="-1"></a>                                                       exposure, <span class="st">&quot;+&quot;</span>, </span>
+<span id="cb16-9"><a href="user-written-function.html#cb16-9" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">paste</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>))),</span>
+<span id="cb16-10"><a href="user-written-function.html#cb16-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb16-11"><a href="user-written-function.html#cb16-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data=</span>plasmodeData.i))<span class="sc">$</span>coef[exposure,<span class="st">&quot;Estimate&quot;</span>]),</span>
+<span id="cb16-12"><a href="user-written-function.html#cb16-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">error =</span> <span class="cf">function</span>(e) { <span class="cn">NA</span> } )</span>
+<span id="cb16-13"><a href="user-written-function.html#cb16-13" aria-hidden="true" tabindex="-1"></a>  saveOR <span class="ot">&lt;-</span> <span class="fu">c</span>(estORx,saveOR)</span>
+<span id="cb16-14"><a href="user-written-function.html#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;iteration&quot;</span>, i, <span class="st">&quot;event rate =&quot;</span>, </span>
+<span id="cb16-15"><a href="user-written-function.html#cb16-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>EVENT)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>EVENT),<span class="dv">2</span>),</span>
+<span id="cb16-16"><a href="user-written-function.html#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;exposure prevalence =&quot;</span>, </span>
+<span id="cb16-17"><a href="user-written-function.html#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>swang1)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>swang1),<span class="dv">2</span>),</span>
+<span id="cb16-18"><a href="user-written-function.html#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;OR =&quot;</span>, <span class="fu">round</span>(estORx,<span class="dv">2</span>),</span>
+<span id="cb16-19"><a href="user-written-function.html#cb16-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;cumulative mean OR=&quot;</span>, </span>
+<span id="cb16-20"><a href="user-written-function.html#cb16-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">mean</span>(saveOR, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">2</span>),<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb16-21"><a href="user-written-function.html#cb16-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## iteration 1 event rate = 0.65 exposure prevalence = 0.38 OR = 2.85 cumulative mean OR= 2.85 
+## iteration 2 event rate = 0.64 exposure prevalence = 0.38 OR = 3.37 cumulative mean OR= 3.11 
+## iteration 3 event rate = 0.63 exposure prevalence = 0.38 OR = 3.56 cumulative mean OR= 3.26 
+## iteration 4 event rate = 0.65 exposure prevalence = 0.38 OR = 3.49 cumulative mean OR= 3.32 
+## iteration 5 event rate = 0.65 exposure prevalence = 0.38 OR = 3.62 cumulative mean OR= 3.38 
+## iteration 6 event rate = 0.65 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.34 
+## iteration 7 event rate = 0.64 exposure prevalence = 0.38 OR = 2.34 cumulative mean OR= 3.2 
+## iteration 8 event rate = 0.64 exposure prevalence = 0.38 OR = 3.09 cumulative mean OR= 3.18 
+## iteration 9 event rate = 0.65 exposure prevalence = 0.38 OR = 3.06 cumulative mean OR= 3.17 
+## iteration 10 event rate = 0.65 exposure prevalence = 0.38 OR = 3.24 cumulative mean OR= 3.18 
+## iteration 11 event rate = 0.66 exposure prevalence = 0.38 OR = 3.73 cumulative mean OR= 3.23 
+## iteration 12 event rate = 0.65 exposure prevalence = 0.38 OR = 2.92 cumulative mean OR= 3.2 
+## iteration 13 event rate = 0.65 exposure prevalence = 0.38 OR = 3.04 cumulative mean OR= 3.19 
+## iteration 14 event rate = 0.66 exposure prevalence = 0.38 OR = 2.8 cumulative mean OR= 3.16 
+## iteration 15 event rate = 0.65 exposure prevalence = 0.38 OR = 3.03 cumulative mean OR= 3.15 
+## iteration 16 event rate = 0.64 exposure prevalence = 0.38 OR = 3.49 cumulative mean OR= 3.17 
+## iteration 17 event rate = 0.65 exposure prevalence = 0.38 OR = 3.63 cumulative mean OR= 3.2 
+## iteration 18 event rate = 0.65 exposure prevalence = 0.38 OR = 3.21 cumulative mean OR= 3.2 
+## iteration 19 event rate = 0.64 exposure prevalence = 0.38 OR = 2.96 cumulative mean OR= 3.19 
+## iteration 20 event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.18 
+## iteration 21 event rate = 0.66 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.18 
+## iteration 22 event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.18 
+## iteration 23 event rate = 0.65 exposure prevalence = 0.38 OR = 3.33 cumulative mean OR= 3.19 
+## iteration 24 event rate = 0.67 exposure prevalence = 0.38 OR = 3.09 cumulative mean OR= 3.19 
+## iteration 25 event rate = 0.65 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.18 
+## iteration 26 event rate = 0.64 exposure prevalence = 0.38 OR = 2.53 cumulative mean OR= 3.15 
+## iteration 27 event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.14 
+## iteration 28 event rate = 0.66 exposure prevalence = 0.38 OR = 3.1 cumulative mean OR= 3.14 
+## iteration 29 event rate = 0.63 exposure prevalence = 0.38 OR = 2.81 cumulative mean OR= 3.13 
+## iteration 30 event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.12 
+## iteration 31 event rate = 0.65 exposure prevalence = 0.38 OR = 2.55 cumulative mean OR= 3.11 
+## iteration 32 event rate = 0.65 exposure prevalence = 0.38 OR = 2.74 cumulative mean OR= 3.09 
+## iteration 33 event rate = 0.66 exposure prevalence = 0.38 OR = 3.52 cumulative mean OR= 3.11 
+## iteration 34 event rate = 0.66 exposure prevalence = 0.38 OR = 3.34 cumulative mean OR= 3.11 
+## iteration 35 event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.11 
+## iteration 36 event rate = 0.65 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.1 
+## iteration 37 event rate = 0.65 exposure prevalence = 0.38 OR = 3.01 cumulative mean OR= 3.1 
+## iteration 38 event rate = 0.65 exposure prevalence = 0.38 OR = 2.6 cumulative mean OR= 3.09 
+## iteration 39 event rate = 0.64 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.09 
+## iteration 40 event rate = 0.66 exposure prevalence = 0.38 OR = 2.92 cumulative mean OR= 3.08 
+## iteration 41 event rate = 0.64 exposure prevalence = 0.38 OR = 3.54 cumulative mean OR= 3.09 
+## iteration 42 event rate = 0.66 exposure prevalence = 0.38 OR = 3.46 cumulative mean OR= 3.1 
+## iteration 43 event rate = 0.65 exposure prevalence = 0.38 OR = 2.91 cumulative mean OR= 3.1 
+## iteration 44 event rate = 0.66 exposure prevalence = 0.38 OR = 3.81 cumulative mean OR= 3.11 
+## iteration 45 event rate = 0.65 exposure prevalence = 0.38 OR = 2.89 cumulative mean OR= 3.11 
+## iteration 46 event rate = 0.65 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.11 
+## iteration 47 event rate = 0.66 exposure prevalence = 0.38 OR = 2.48 cumulative mean OR= 3.09 
+## iteration 48 event rate = 0.64 exposure prevalence = 0.38 OR = 2.58 cumulative mean OR= 3.08 
+## iteration 49 event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.08 
+## iteration 50 event rate = 0.64 exposure prevalence = 0.38 OR = 3.46 cumulative mean OR= 3.09 
+## iteration 51 event rate = 0.64 exposure prevalence = 0.38 OR = 3.02 cumulative mean OR= 3.09 
+## iteration 52 event rate = 0.65 exposure prevalence = 0.38 OR = 2.95 cumulative mean OR= 3.08 
+## iteration 53 event rate = 0.66 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.08 
+## iteration 54 event rate = 0.66 exposure prevalence = 0.38 OR = 2.72 cumulative mean OR= 3.08 
+## iteration 55 event rate = 0.66 exposure prevalence = 0.38 OR = 2.79 cumulative mean OR= 3.07 
+## iteration 56 event rate = 0.66 exposure prevalence = 0.38 OR = 3.55 cumulative mean OR= 3.08 
+## iteration 57 event rate = 0.65 exposure prevalence = 0.38 OR = 2.99 cumulative mean OR= 3.08 
+## iteration 58 event rate = 0.65 exposure prevalence = 0.38 OR = 2.74 cumulative mean OR= 3.07 
+## iteration 59 event rate = 0.65 exposure prevalence = 0.38 OR = 3.19 cumulative mean OR= 3.07 
+## iteration 60 event rate = 0.66 exposure prevalence = 0.38 OR = 3.48 cumulative mean OR= 3.08 
+## iteration 61 event rate = 0.64 exposure prevalence = 0.38 OR = 3.07 cumulative mean OR= 3.08 
+## iteration 62 event rate = 0.65 exposure prevalence = 0.38 OR = 2.54 cumulative mean OR= 3.07 
+## iteration 63 event rate = 0.64 exposure prevalence = 0.38 OR = 3.11 cumulative mean OR= 3.07 
+## iteration 64 event rate = 0.64 exposure prevalence = 0.38 OR = 3.35 cumulative mean OR= 3.08 
+## iteration 65 event rate = 0.64 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.08 
+## iteration 66 event rate = 0.64 exposure prevalence = 0.38 OR = 2.9 cumulative mean OR= 3.08 
+## iteration 67 event rate = 0.65 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.08 
+## iteration 68 event rate = 0.65 exposure prevalence = 0.38 OR = 3.36 cumulative mean OR= 3.08 
+## iteration 69 event rate = 0.65 exposure prevalence = 0.38 OR = 3.4 cumulative mean OR= 3.08 
+## iteration 70 event rate = 0.65 exposure prevalence = 0.38 OR = 3.26 cumulative mean OR= 3.09 
+## iteration 71 event rate = 0.65 exposure prevalence = 0.38 OR = 3.43 cumulative mean OR= 3.09 
+## iteration 72 event rate = 0.65 exposure prevalence = 0.38 OR = 2.86 cumulative mean OR= 3.09 
+## iteration 73 event rate = 0.65 exposure prevalence = 0.38 OR = 3.1 cumulative mean OR= 3.09 
+## iteration 74 event rate = 0.64 exposure prevalence = 0.38 OR = 2.77 cumulative mean OR= 3.08 
+## iteration 75 event rate = 0.65 exposure prevalence = 0.38 OR = NA cumulative mean OR= 3.08 
+## iteration 76 event rate = 0.64 exposure prevalence = 0.38 OR = 2.76 cumulative mean OR= 3.08 
+## iteration 77 event rate = 0.65 exposure prevalence = 0.38 OR = 2.57 cumulative mean OR= 3.07 
+## iteration 78 event rate = 0.65 exposure prevalence = 0.38 OR = 3.76 cumulative mean OR= 3.08 
+## iteration 79 event rate = 0.65 exposure prevalence = 0.38 OR = 3.96 cumulative mean OR= 3.09 
+## iteration 80 event rate = 0.66 exposure prevalence = 0.38 OR = 3.14 cumulative mean OR= 3.09 
+## iteration 81 event rate = 0.66 exposure prevalence = 0.38 OR = 2.42 cumulative mean OR= 3.09 
+## iteration 82 event rate = 0.65 exposure prevalence = 0.38 OR = 3.13 cumulative mean OR= 3.09 
+## iteration 83 event rate = 0.67 exposure prevalence = 0.38 OR = 2.93 cumulative mean OR= 3.08 
+## iteration 84 event rate = 0.66 exposure prevalence = 0.38 OR = 3.27 cumulative mean OR= 3.09 
+## iteration 85 event rate = 0.64 exposure prevalence = 0.38 OR = 2.93 cumulative mean OR= 3.08 
+## iteration 86 event rate = 0.66 exposure prevalence = 0.38 OR = 3.05 cumulative mean OR= 3.08 
+## iteration 87 event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.08 
+## iteration 88 event rate = 0.64 exposure prevalence = 0.38 OR = 2.22 cumulative mean OR= 3.07 
+## iteration 89 event rate = 0.65 exposure prevalence = 0.38 OR = 3.3 cumulative mean OR= 3.08 
+## iteration 90 event rate = 0.66 exposure prevalence = 0.38 OR = 2.97 cumulative mean OR= 3.07 
+## iteration 91 event rate = 0.66 exposure prevalence = 0.38 OR = 3.52 cumulative mean OR= 3.08 
+## iteration 92 event rate = 0.64 exposure prevalence = 0.38 OR = 3.69 cumulative mean OR= 3.09 
+## iteration 93 event rate = 0.66 exposure prevalence = 0.38 OR = 2.98 cumulative mean OR= 3.09 
+## iteration 94 event rate = 0.65 exposure prevalence = 0.38 OR = 2.76 cumulative mean OR= 3.08 
+## iteration 95 event rate = 0.66 exposure prevalence = 0.38 OR = 3 cumulative mean OR= 3.08 
+## iteration 96 event rate = 0.64 exposure prevalence = 0.38 OR = 3.51 cumulative mean OR= 3.09 
+## iteration 97 event rate = 0.64 exposure prevalence = 0.38 OR = 3.78 cumulative mean OR= 3.09 
+## iteration 98 event rate = 0.65 exposure prevalence = 0.38 OR = 3.04 cumulative mean OR= 3.09 
+## iteration 99 event rate = 0.67 exposure prevalence = 0.38 OR = 3.05 cumulative mean OR= 3.09 
+## iteration 100 event rate = 0.65 exposure prevalence = 0.38 OR = 3.12 cumulative mean OR= 3.09</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="user-written-function.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(saveOR)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   2.223   2.902   3.049   3.092   3.336   3.957       1</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="user-written-function.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(saveOR)</span></code></pre></div>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="user-written-function.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(simdata)</span></code></pre></div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-franklin2015regularized" class="csl-entry">
+Franklin, Jessica M, Wesley Eddings, Robert J Glynn, and Sebastian Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="package.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/ehsanx/PlasmodeSim/edit/master/index.RMD",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["plasmode.pdf", "plasmode.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

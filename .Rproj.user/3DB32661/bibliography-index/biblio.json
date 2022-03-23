@@ -1,0 +1,161 @@
+{
+    "sources": [
+        {
+            "URL": "https://tinyurl.com/Connors1996",
+            "author": [
+                {
+                    "family": "Connors",
+                    "given": "Alfred F"
+                },
+                {
+                    "family": "Speroff",
+                    "given": "Theodore"
+                },
+                {
+                    "family": "Dawson",
+                    "given": "Neal V"
+                },
+                {
+                    "family": "Thomas",
+                    "given": "Charles"
+                },
+                {
+                    "family": "Harrell",
+                    "given": "Frank E"
+                },
+                {
+                    "family": "Wagner",
+                    "given": "Douglas"
+                },
+                {
+                    "family": "Desbiens",
+                    "given": "Norman"
+                },
+                {
+                    "family": "Goldman",
+                    "given": "Lee"
+                },
+                {
+                    "family": "Wu",
+                    "given": "Albert W"
+                },
+                {
+                    "family": "Califf",
+                    "given": "Robert M"
+                },
+                {
+                    "literal": "others"
+                }
+            ],
+            "container-title": "Jama",
+            "id": "connors1996effectiveness",
+            "issue": "11",
+            "issued": {
+                "date-parts": [
+                    [
+                        1996
+                    ]
+                ]
+            },
+            "page": "889-897",
+            "publisher": "American Medical Association",
+            "title": "The effectiveness of right heart catheterization in the initial care of critically III patients",
+            "type": "article-journal",
+            "volume": "276"
+        },
+        {
+            "author": [
+                {
+                    "family": "Franklin",
+                    "given": "Jessica M"
+                },
+                {
+                    "family": "Schneeweiss",
+                    "given": "Sebastian"
+                },
+                {
+                    "family": "Polinski",
+                    "given": "Jennifer M"
+                },
+                {
+                    "family": "Rassen",
+                    "given": "Jeremy A"
+                }
+            ],
+            "container-title": "Computational statistics & data analysis",
+            "id": "franklin2014plasmode",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "219-226",
+            "publisher": "Elsevier",
+            "title": "Plasmode simulation for the evaluation of pharmacoepidemiologic methods in complex healthcare databases",
+            "type": "article-journal",
+            "volume": "72"
+        },
+        {
+            "author": [
+                {
+                    "family": "Franklin",
+                    "given": "Jessica M"
+                },
+                {
+                    "family": "Eddings",
+                    "given": "Wesley"
+                },
+                {
+                    "family": "Glynn",
+                    "given": "Robert J"
+                },
+                {
+                    "family": "Schneeweiss",
+                    "given": "Sebastian"
+                }
+            ],
+            "container-title": "American journal of epidemiology",
+            "id": "franklin2015regularized",
+            "issue": "7",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "page": "651-659",
+            "publisher": "Oxford University Press",
+            "title": "Regularized regression versus the high-dimensional propensity score for confounding adjustment in secondary database analyses",
+            "type": "article-journal",
+            "volume": "182"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "R-base",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        }
+    ],
+    "project_biblios": [
+        "book.bib",
+        "packages.bib"
+    ]
+}

@@ -4,21 +4,21 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Package | Understanding Plasmode Simulation</title>
-  <meta name="description" content="Chapter 3 Package | Understanding Plasmode Simulation." />
+  <title>Chapter 4 Package | Understanding Plasmode Simulation</title>
+  <meta name="description" content="Chapter 4 Package | Understanding Plasmode Simulation." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Package | Understanding Plasmode Simulation" />
+  <meta property="og:title" content="Chapter 4 Package | Understanding Plasmode Simulation" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Chapter 3 Package | Understanding Plasmode Simulation." />
+  <meta property="og:description" content="Chapter 4 Package | Understanding Plasmode Simulation." />
   <meta name="github-repo" content="ehsanx/PlasmodeSim" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Package | Understanding Plasmode Simulation" />
+  <meta name="twitter:title" content="Chapter 4 Package | Understanding Plasmode Simulation" />
   
-  <meta name="twitter:description" content="Chapter 3 Package | Understanding Plasmode Simulation." />
+  <meta name="twitter:description" content="Chapter 4 Package | Understanding Plasmode Simulation." />
   
 
 <meta name="author" content="Ehsan Karim" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <li><a href="./">Plasmode simulation</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data load</a></li>
-<li class="chapter" data-level="2" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>2</b> User-written Function</a></li>
-<li class="chapter" data-level="3" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>3</b> Package</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Plasmode simulation</a></li>
+<li class="chapter" data-level="2" data-path="data-load.html"><a href="data-load.html"><i class="fa fa-check"></i><b>2</b> Data load</a></li>
+<li class="chapter" data-level="3" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>3</b> User-written Function</a></li>
+<li class="chapter" data-level="4" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>4</b> Package</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://ehsank.com/" target="blank">Contact</a></li>
@@ -207,8 +208,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="package" class="section level1" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Package</h1>
+<div id="package" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Package</h1>
 <p>Using the <a href="https://cran.r-project.org/web/packages/Plasmode/index.html">plasmode package</a>. See more details <a href="https://www.drugepi.org/dope/software#Plasmode">here</a>.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="package.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c(&#39;glm2&#39;, &#39;arm&#39;, &#39;lme4&#39;, &#39;epiDisplay&#39;))</span></span>
 <span id="cb22-2"><a href="package.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(</span></span>
@@ -216,46 +217,47 @@ div.csl-indent {
 <span id="cb22-4"><a href="package.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   repos = NULL, type = &quot;source&quot;</span></span>
 <span id="cb22-5"><a href="package.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
 <span id="cb22-6"><a href="package.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(Plasmode)</span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="package.html#cb23-1" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb23-2"><a href="package.html#cb23-2" aria-hidden="true" tabindex="-1"></a>formulaOut <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;death ~ swang1 +&quot;</span>, </span>
-<span id="cb23-3"><a href="package.html#cb23-3" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>)))</span>
-<span id="cb23-4"><a href="package.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#fity &lt;- glm(paste0(&quot;death ~ swang1 +&quot;, paste(vars, </span></span>
-<span id="cb23-5"><a href="package.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># collapse = &quot;+&quot;)), family = binomial, data = rhc)</span></span>
-<span id="cb23-6"><a href="package.html#cb23-6" aria-hidden="true" tabindex="-1"></a>simdata.obj <span class="ot">&lt;-</span> <span class="fu">PlasmodeBin</span>(formulaOut,</span>
-<span id="cb23-7"><a href="package.html#cb23-7" aria-hidden="true" tabindex="-1"></a>                       <span class="co">#objectOut=fity, </span></span>
-<span id="cb23-8"><a href="package.html#cb23-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span>rhc,</span>
-<span id="cb23-9"><a href="package.html#cb23-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">idVar=</span><span class="st">&quot;id&quot;</span>,</span>
-<span id="cb23-10"><a href="package.html#cb23-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">effectOR =</span><span class="dv">3</span>,</span>
-<span id="cb23-11"><a href="package.html#cb23-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nsim=</span>nSim, </span>
-<span id="cb23-12"><a href="package.html#cb23-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">size=</span><span class="dv">3000</span>, </span>
-<span id="cb23-13"><a href="package.html#cb23-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">eventRate=</span><span class="fl">0.65</span>, </span>
-<span id="cb23-14"><a href="package.html#cb23-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">exposedPrev=</span><span class="fl">0.38</span>)</span></code></pre></div>
+<pre><code>## Loading required package: Plasmode</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="package.html#cb24-1" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb24-2"><a href="package.html#cb24-2" aria-hidden="true" tabindex="-1"></a>formulaOut <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;death ~ swang1 +&quot;</span>, </span>
+<span id="cb24-3"><a href="package.html#cb24-3" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>)))</span>
+<span id="cb24-4"><a href="package.html#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#fity &lt;- glm(paste0(&quot;death ~ swang1 +&quot;, paste(vars, </span></span>
+<span id="cb24-5"><a href="package.html#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># collapse = &quot;+&quot;)), family = binomial, data = rhc)</span></span>
+<span id="cb24-6"><a href="package.html#cb24-6" aria-hidden="true" tabindex="-1"></a>simdata.obj <span class="ot">&lt;-</span> <span class="fu">PlasmodeBin</span>(formulaOut,</span>
+<span id="cb24-7"><a href="package.html#cb24-7" aria-hidden="true" tabindex="-1"></a>                       <span class="co">#objectOut=fity, </span></span>
+<span id="cb24-8"><a href="package.html#cb24-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span>rhc,</span>
+<span id="cb24-9"><a href="package.html#cb24-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">idVar=</span><span class="st">&quot;id&quot;</span>,</span>
+<span id="cb24-10"><a href="package.html#cb24-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">effectOR =</span><span class="dv">3</span>,</span>
+<span id="cb24-11"><a href="package.html#cb24-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nsim=</span>nSim, </span>
+<span id="cb24-12"><a href="package.html#cb24-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">size=</span><span class="dv">3000</span>, </span>
+<span id="cb24-13"><a href="package.html#cb24-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">eventRate=</span><span class="fl">0.65</span>, </span>
+<span id="cb24-14"><a href="package.html#cb24-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">exposedPrev=</span><span class="fl">0.38</span>)</span></code></pre></div>
 <pre><code>## Deviance = 6096.413 Iterations - 1 
 ## Deviance = 6052.406 Iterations - 2 
 ## Deviance = 6051.25 Iterations - 3 
 ## Deviance = 6051.248 Iterations - 4 
 ## Deviance = 6051.248 Iterations - 5</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="package.html#cb25-1" aria-hidden="true" tabindex="-1"></a>simdata <span class="ot">&lt;-</span> simdata.obj<span class="sc">$</span>Sim_Data</span>
-<span id="cb25-2"><a href="package.html#cb25-2" aria-hidden="true" tabindex="-1"></a>saveOR <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb25-3"><a href="package.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nSim){</span>
-<span id="cb25-4"><a href="package.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  plasmodeData.i <span class="ot">&lt;-</span> <span class="fu">join</span>(<span class="fu">data.frame</span>(<span class="at">id=</span>simdata[,i],</span>
-<span id="cb25-5"><a href="package.html#cb25-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">EVENT=</span>simdata[,i<span class="sc">+</span>nSim]), </span>
-<span id="cb25-6"><a href="package.html#cb25-6" aria-hidden="true" tabindex="-1"></a>                         rhc, <span class="at">by=</span><span class="st">&quot;id&quot;</span>, <span class="at">type=</span><span class="st">&quot;left&quot;</span>)</span>
-<span id="cb25-7"><a href="package.html#cb25-7" aria-hidden="true" tabindex="-1"></a>  estORx <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">exp</span>(<span class="fu">summary</span>(<span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;EVENT&quot;</span>, <span class="st">&quot;~&quot;</span>, </span>
-<span id="cb25-8"><a href="package.html#cb25-8" aria-hidden="true" tabindex="-1"></a>                                                       exposure, <span class="st">&quot;+&quot;</span>, </span>
-<span id="cb25-9"><a href="package.html#cb25-9" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">paste</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>))),</span>
-<span id="cb25-10"><a href="package.html#cb25-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>),</span>
-<span id="cb25-11"><a href="package.html#cb25-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data=</span>plasmodeData.i))<span class="sc">$</span>coef[exposure,<span class="st">&quot;Estimate&quot;</span>]),</span>
-<span id="cb25-12"><a href="package.html#cb25-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">error =</span> <span class="cf">function</span>(e) { <span class="cn">NA</span> } )</span>
-<span id="cb25-13"><a href="package.html#cb25-13" aria-hidden="true" tabindex="-1"></a>  saveOR <span class="ot">&lt;-</span> <span class="fu">c</span>(estORx,saveOR)</span>
-<span id="cb25-14"><a href="package.html#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;iteration&quot;</span>, i, <span class="st">&quot;event rate =&quot;</span>, </span>
-<span id="cb25-15"><a href="package.html#cb25-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>EVENT)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>EVENT),<span class="dv">2</span>),</span>
-<span id="cb25-16"><a href="package.html#cb25-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;exposure prevalence =&quot;</span>, </span>
-<span id="cb25-17"><a href="package.html#cb25-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>swang1)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>swang1),<span class="dv">2</span>),</span>
-<span id="cb25-18"><a href="package.html#cb25-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;OR =&quot;</span>, <span class="fu">round</span>(estORx,<span class="dv">2</span>),</span>
-<span id="cb25-19"><a href="package.html#cb25-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;cumulative mean OR=&quot;</span>, </span>
-<span id="cb25-20"><a href="package.html#cb25-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">mean</span>(saveOR, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">2</span>),<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb25-21"><a href="package.html#cb25-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="package.html#cb26-1" aria-hidden="true" tabindex="-1"></a>simdata <span class="ot">&lt;-</span> simdata.obj<span class="sc">$</span>Sim_Data</span>
+<span id="cb26-2"><a href="package.html#cb26-2" aria-hidden="true" tabindex="-1"></a>saveOR <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb26-3"><a href="package.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nSim){</span>
+<span id="cb26-4"><a href="package.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  plasmodeData.i <span class="ot">&lt;-</span> <span class="fu">join</span>(<span class="fu">data.frame</span>(<span class="at">id=</span>simdata[,i],</span>
+<span id="cb26-5"><a href="package.html#cb26-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">EVENT=</span>simdata[,i<span class="sc">+</span>nSim]), </span>
+<span id="cb26-6"><a href="package.html#cb26-6" aria-hidden="true" tabindex="-1"></a>                         rhc, <span class="at">by=</span><span class="st">&quot;id&quot;</span>, <span class="at">type=</span><span class="st">&quot;left&quot;</span>)</span>
+<span id="cb26-7"><a href="package.html#cb26-7" aria-hidden="true" tabindex="-1"></a>  estORx <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">exp</span>(<span class="fu">summary</span>(<span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">&quot;EVENT&quot;</span>, <span class="st">&quot;~&quot;</span>, </span>
+<span id="cb26-8"><a href="package.html#cb26-8" aria-hidden="true" tabindex="-1"></a>                                                       exposure, <span class="st">&quot;+&quot;</span>, </span>
+<span id="cb26-9"><a href="package.html#cb26-9" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">paste</span>(vars, <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>))),</span>
+<span id="cb26-10"><a href="package.html#cb26-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb26-11"><a href="package.html#cb26-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">data=</span>plasmodeData.i))<span class="sc">$</span>coef[exposure,<span class="st">&quot;Estimate&quot;</span>]),</span>
+<span id="cb26-12"><a href="package.html#cb26-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">error =</span> <span class="cf">function</span>(e) { <span class="cn">NA</span> } )</span>
+<span id="cb26-13"><a href="package.html#cb26-13" aria-hidden="true" tabindex="-1"></a>  saveOR <span class="ot">&lt;-</span> <span class="fu">c</span>(estORx,saveOR)</span>
+<span id="cb26-14"><a href="package.html#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;iteration&quot;</span>, i, <span class="st">&quot;event rate =&quot;</span>, </span>
+<span id="cb26-15"><a href="package.html#cb26-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>EVENT)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>EVENT),<span class="dv">2</span>),</span>
+<span id="cb26-16"><a href="package.html#cb26-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;exposure prevalence =&quot;</span>, </span>
+<span id="cb26-17"><a href="package.html#cb26-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">table</span>(plasmodeData.i<span class="sc">$</span>swang1)[<span class="dv">2</span>]<span class="sc">/</span><span class="fu">length</span>(plasmodeData.i<span class="sc">$</span>swang1),<span class="dv">2</span>),</span>
+<span id="cb26-18"><a href="package.html#cb26-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;OR =&quot;</span>, <span class="fu">round</span>(estORx,<span class="dv">2</span>),</span>
+<span id="cb26-19"><a href="package.html#cb26-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;cumulative mean OR=&quot;</span>, </span>
+<span id="cb26-20"><a href="package.html#cb26-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">mean</span>(saveOR, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">2</span>),<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb26-21"><a href="package.html#cb26-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## iteration 1 event rate = 0.65 exposure prevalence = 0.38 OR = 3.21 cumulative mean OR= 3.21 
 ## iteration 2 event rate = 0.65 exposure prevalence = 0.38 OR = 3.08 cumulative mean OR= 3.14 
 ## iteration 3 event rate = 0.66 exposure prevalence = 0.38 OR = 3.59 cumulative mean OR= 3.29 
@@ -356,11 +358,11 @@ div.csl-indent {
 ## iteration 98 event rate = 0.64 exposure prevalence = 0.38 OR = 3.27 cumulative mean OR= 3.14 
 ## iteration 99 event rate = 0.65 exposure prevalence = 0.38 OR = 3.23 cumulative mean OR= 3.14 
 ## iteration 100 event rate = 0.67 exposure prevalence = 0.38 OR = 3.48 cumulative mean OR= 3.15</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="package.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(saveOR)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="package.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(saveOR)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##   2.535   2.902   3.121   3.148   3.335   4.165       3</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="package.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(saveOR)</span></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="package.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(saveOR)</span></code></pre></div>
+<p><img src="plasmode_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
             </section>
 
@@ -422,6 +424,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

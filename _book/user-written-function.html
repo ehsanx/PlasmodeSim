@@ -4,21 +4,21 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 User-written Function | Understanding Plasmode Simulation</title>
-  <meta name="description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  <title>Chapter 3 User-written Function | Understanding Plasmode Simulation</title>
+  <meta name="description" content="Chapter 3 User-written Function | Understanding Plasmode Simulation." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 User-written Function | Understanding Plasmode Simulation" />
+  <meta property="og:title" content="Chapter 3 User-written Function | Understanding Plasmode Simulation" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  <meta property="og:description" content="Chapter 3 User-written Function | Understanding Plasmode Simulation." />
   <meta name="github-repo" content="ehsanx/PlasmodeSim" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 User-written Function | Understanding Plasmode Simulation" />
+  <meta name="twitter:title" content="Chapter 3 User-written Function | Understanding Plasmode Simulation" />
   
-  <meta name="twitter:description" content="Chapter 2 User-written Function | Understanding Plasmode Simulation." />
+  <meta name="twitter:description" content="Chapter 3 User-written Function | Understanding Plasmode Simulation." />
   
 
 <meta name="author" content="Ehsan Karim" />
@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
+<link rel="prev" href="data-load.html"/>
 <link rel="next" href="package.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -183,9 +183,10 @@ div.csl-indent {
 <li><a href="./">Plasmode simulation</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data load</a></li>
-<li class="chapter" data-level="2" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>2</b> User-written Function</a></li>
-<li class="chapter" data-level="3" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>3</b> Package</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Plasmode simulation</a></li>
+<li class="chapter" data-level="2" data-path="data-load.html"><a href="data-load.html"><i class="fa fa-check"></i><b>2</b> Data load</a></li>
+<li class="chapter" data-level="3" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>3</b> User-written Function</a></li>
+<li class="chapter" data-level="4" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>4</b> Package</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://ehsank.com/" target="blank">Contact</a></li>
@@ -207,9 +208,9 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="user-written-function" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> User-written Function</h1>
-<p>See <span class="citation"><a href="#ref-franklin2015regularized" role="doc-biblioref">Franklin et al.</a> (<a href="#ref-franklin2015regularized" role="doc-biblioref">2015</a>)</span></p>
+<div id="user-written-function" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> User-written Function</h1>
+<p>See <span class="citation"><a href="#ref-franklin2015regularized" role="doc-biblioref">J. M. Franklin et al.</a> (<a href="#ref-franklin2015regularized" role="doc-biblioref">2015</a>)</span></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="user-written-function.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plasmode simulation</span></span>
 <span id="cb7-2"><a href="user-written-function.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;functions/PlasmodeSim.R&quot;</span>)</span>
 <span id="cb7-3"><a href="user-written-function.html#cb7-3" aria-hidden="true" tabindex="-1"></a>nSim <span class="ot">&lt;-</span> <span class="dv">100</span></span>
@@ -234,11 +235,11 @@ div.csl-indent {
 <pre><code>## Deviance = 6051.24785515008 Iterations - 6</code></pre>
 <pre><code>## Fit complete. Finishing gam object.
 ##           user.self sys.self elapsed
-## initial        0.03     0.00    0.03
-## gam.setup      0.02     0.00    0.01
-## pre-fit        0.00     0.00    0.00
-## fit            0.27     0.01    0.28
-## finalise       0.00     0.02    0.02
+## initial        0.04        0    0.05
+## gam.setup      0.02        0    0.01
+## pre-fit        0.00        0    0.00
+## fit            0.42        0    0.43
+## finalise       0.02        0    0.01
 ## simulation ID created for iteration 1 
 ## simulation ID created for iteration 2 
 ## simulation ID created for iteration 3 
@@ -464,13 +465,13 @@ div.csl-indent {
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##   2.223   2.902   3.049   3.092   3.336   3.957       1</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="user-written-function.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(saveOR)</span></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="plasmode_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="user-written-function.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(simdata)</span></code></pre></div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-franklin2015regularized" class="csl-entry">
-Franklin, Jessica M, Wesley Eddings, Robert J Glynn, and Sebastian Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
+Franklin, J. M., W. Eddings, R. J. Glynn, and S. Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
 </div>
 </div>
             </section>
@@ -478,7 +479,7 @@ Franklin, Jessica M, Wesley Eddings, Robert J Glynn, and Sebastian Schneeweiss. 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-load.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="package.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -533,6 +534,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

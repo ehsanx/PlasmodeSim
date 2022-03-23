@@ -183,9 +183,10 @@ div.csl-indent {
 <li><a href="./">Plasmode simulation</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data load</a></li>
-<li class="chapter" data-level="2" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>2</b> User-written Function</a></li>
-<li class="chapter" data-level="3" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>3</b> Package</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Plasmode simulation</a></li>
+<li class="chapter" data-level="2" data-path="data-load.html"><a href="data-load.html"><i class="fa fa-check"></i><b>2</b> Data load</a></li>
+<li class="chapter" data-level="3" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>3</b> User-written Function</a></li>
+<li class="chapter" data-level="4" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>4</b> Package</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://ehsank.com/" target="blank">Contact</a></li>
@@ -214,10 +215,16 @@ div.csl-indent {
 Connors, Alfred F, Theodore Speroff, Neal V Dawson, Charles Thomas, Frank E Harrell, Douglas Wagner, Norman Desbiens, et al. 1996. <span>“The Effectiveness of Right Heart Catheterization in the Initial Care of Critically III Patients.”</span> <em>Jama</em> 276 (11): 889–97. <a href="https://tinyurl.com/Connors1996">https://tinyurl.com/Connors1996</a>.
 </div>
 <div class="csl-entry">
-Franklin, Jessica M, Wesley Eddings, Robert J Glynn, and Sebastian Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
+Franklin, J. M., W. Eddings, R. J. Glynn, and S. Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
 </div>
 <div class="csl-entry">
-Franklin, Jessica M, Sebastian Schneeweiss, Jennifer M Polinski, and Jeremy A Rassen. 2014. <span>“Plasmode Simulation for the Evaluation of Pharmacoepidemiologic Methods in Complex Healthcare Databases.”</span> <em>Computational Statistics &amp; Data Analysis</em> 72: 219–26.
+Franklin, J. M., S. Schneeweiss, J. M. Polinski, and J. A. Rassen. 2014. <span>“Plasmode Simulation for the Evaluation of Pharmacoepidemiologic Methods in Complex Healthcare Databases.”</span> <em>Computational Statistics &amp; Data Analysis</em> 72: 219–26.
+</div>
+<div class="csl-entry">
+Franklin, Jessica M, Wesley Eddings, Peter C Austin, Elizabeth A Stuart, and Sebastian Schneeweiss. 2017. <span>“Comparing the Performance of Propensity Score Methods in Healthcare Database Studies with Rare Outcomes.”</span> <em>Statistics in Medicine</em>. <a href="https://doi.org/10.1002/sim.7250">https://doi.org/10.1002/sim.7250</a>.
+</div>
+<div class="csl-entry">
+Karim, Mohammad Ehsanul, Menglan Pang, and Robert W Platt. 2018. <span>“Can We Train Machine Learning Methods to Outperform the High-Dimensional Propensity Score Algorithm?”</span> <em>Epidemiology</em> 29 (2): 191–98.
 </div>
 </div>
 
@@ -282,6 +289,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

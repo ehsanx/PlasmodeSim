@@ -32,7 +32,7 @@
   
   
 
-<link rel="next" href="user-written-function.html"/>
+<link rel="next" href="data-load.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -183,9 +183,10 @@ div.csl-indent {
 <li><a href="./">Plasmode simulation</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Data load</a></li>
-<li class="chapter" data-level="2" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>2</b> User-written Function</a></li>
-<li class="chapter" data-level="3" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>3</b> Package</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Plasmode simulation</a></li>
+<li class="chapter" data-level="2" data-path="data-load.html"><a href="data-load.html"><i class="fa fa-check"></i><b>2</b> Data load</a></li>
+<li class="chapter" data-level="3" data-path="user-written-function.html"><a href="user-written-function.html"><i class="fa fa-check"></i><b>3</b> User-written Function</a></li>
+<li class="chapter" data-level="4" data-path="package.html"><a href="package.html"><i class="fa fa-check"></i><b>4</b> Package</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://ehsank.com/" target="blank">Contact</a></li>
@@ -212,476 +213,30 @@ div.csl-indent {
 <p class="author"><em>Ehsan Karim</em></p>
 <p class="date"><em>2022-03-23</em></p>
 </div>
-<div id="data-load" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Data load</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="index.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(plyr) </span>
-<span id="cb2-2"><a href="index.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(stringr)</span>
-<span id="cb2-3"><a href="index.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(mgcv)</span>
-<span id="cb2-4"><a href="index.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(knitr)</span></code></pre></div>
-<p>We are using RHC data <span class="citation">(<a href="#ref-connors1996effectiveness" role="doc-biblioref">Connors et al. 1996</a>)</span> as an example.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="index.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/rhcX.RData&quot;</span>)</span>
-<span id="cb3-2"><a href="index.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(rhc))</span></code></pre></div>
-<table>
-<colgroup>
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="4%" />
-<col width="4%" />
-<col width="2%" />
-<col width="1%" />
-<col width="0%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="0%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="right">death</th>
-<th align="right">swang1</th>
-<th align="right">age</th>
-<th align="left">sex</th>
-<th align="left">race</th>
-<th align="right">edu</th>
-<th align="left">income</th>
-<th align="left">ninsclas</th>
-<th align="left">cat1</th>
-<th align="right">das2d3pc</th>
-<th align="left">dnr1</th>
-<th align="left">ca</th>
-<th align="right">surv2md1</th>
-<th align="right">aps1</th>
-<th align="right">scoma1</th>
-<th align="right">wtkilo1</th>
-<th align="right">temp1</th>
-<th align="right">meanbp1</th>
-<th align="right">resp1</th>
-<th align="right">hrt1</th>
-<th align="right">pafi1</th>
-<th align="right">paco21</th>
-<th align="right">ph1</th>
-<th align="right">wblc1</th>
-<th align="right">hema1</th>
-<th align="right">sod1</th>
-<th align="right">pot1</th>
-<th align="right">crea1</th>
-<th align="right">bili1</th>
-<th align="right">alb1</th>
-<th align="left">resp</th>
-<th align="left">card</th>
-<th align="left">neuro</th>
-<th align="left">gastr</th>
-<th align="left">renal</th>
-<th align="left">meta</th>
-<th align="left">hema</th>
-<th align="left">seps</th>
-<th align="left">trauma</th>
-<th align="left">ortho</th>
-<th align="right">cardiohx</th>
-<th align="right">chfhx</th>
-<th align="right">dementhx</th>
-<th align="right">psychhx</th>
-<th align="right">chrpulhx</th>
-<th align="right">renalhx</th>
-<th align="right">liverhx</th>
-<th align="right">gibledhx</th>
-<th align="right">malighx</th>
-<th align="right">immunhx</th>
-<th align="right">transhx</th>
-<th align="right">amihx</th>
-<th align="right">id</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">70.25098</td>
-<td align="left">Male</td>
-<td align="left">white</td>
-<td align="right">12.000000</td>
-<td align="left">Under $11k</td>
-<td align="left">Medicare</td>
-<td align="left">COPD</td>
-<td align="right">23.50000</td>
-<td align="left">No</td>
-<td align="left">Yes</td>
-<td align="right">0.6409912</td>
-<td align="right">46</td>
-<td align="right">0</td>
-<td align="right">64.69995</td>
-<td align="right">38.69531</td>
-<td align="right">41</td>
-<td align="right">10</td>
-<td align="right">124</td>
-<td align="right">68.0000</td>
-<td align="right">40</td>
-<td align="right">7.359375</td>
-<td align="right">22.0976562</td>
-<td align="right">58.00000</td>
-<td align="right">145</td>
-<td align="right">4.000000</td>
-<td align="right">1.1999512</td>
-<td align="right">1.0097656</td>
-<td align="right">3.500000</td>
-<td align="left">Yes</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">78.17896</td>
-<td align="left">Female</td>
-<td align="left">white</td>
-<td align="right">12.000000</td>
-<td align="left">Under $11k</td>
-<td align="left">Private &amp; Medicare</td>
-<td align="left">MOSF w/Sepsis</td>
-<td align="right">14.75195</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0.7549996</td>
-<td align="right">50</td>
-<td align="right">0</td>
-<td align="right">45.69998</td>
-<td align="right">38.89844</td>
-<td align="right">63</td>
-<td align="right">38</td>
-<td align="right">137</td>
-<td align="right">218.3125</td>
-<td align="right">34</td>
-<td align="right">7.329102</td>
-<td align="right">28.8984375</td>
-<td align="right">32.50000</td>
-<td align="right">137</td>
-<td align="right">3.299805</td>
-<td align="right">0.5999756</td>
-<td align="right">0.6999512</td>
-<td align="right">2.599609</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">46.09198</td>
-<td align="left">Female</td>
-<td align="left">white</td>
-<td align="right">14.069916</td>
-<td align="left">$25-$50k</td>
-<td align="left">Private</td>
-<td align="left">MOSF w/Malignancy</td>
-<td align="right">18.13672</td>
-<td align="left">No</td>
-<td align="left">Yes</td>
-<td align="right">0.3169999</td>
-<td align="right">82</td>
-<td align="right">0</td>
-<td align="right">0.00000</td>
-<td align="right">36.39844</td>
-<td align="right">57</td>
-<td align="right">40</td>
-<td align="right">130</td>
-<td align="right">275.5000</td>
-<td align="right">16</td>
-<td align="right">7.359375</td>
-<td align="right">0.0499954</td>
-<td align="right">21.09766</td>
-<td align="right">146</td>
-<td align="right">2.899902</td>
-<td align="right">2.5996094</td>
-<td align="right">1.0097656</td>
-<td align="right">3.500000</td>
-<td align="left">No</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">75.33197</td>
-<td align="left">Female</td>
-<td align="left">white</td>
-<td align="right">9.000000</td>
-<td align="left">$11-$25k</td>
-<td align="left">Private &amp; Medicare</td>
-<td align="left">ARF</td>
-<td align="right">22.92969</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0.4409790</td>
-<td align="right">48</td>
-<td align="right">0</td>
-<td align="right">54.59998</td>
-<td align="right">35.79688</td>
-<td align="right">55</td>
-<td align="right">26</td>
-<td align="right">58</td>
-<td align="right">156.6562</td>
-<td align="right">30</td>
-<td align="right">7.459961</td>
-<td align="right">23.2968750</td>
-<td align="right">26.29688</td>
-<td align="right">117</td>
-<td align="right">5.799805</td>
-<td align="right">1.6999512</td>
-<td align="right">0.3999634</td>
-<td align="right">3.500000</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">67.90997</td>
-<td align="left">Male</td>
-<td align="left">white</td>
-<td align="right">9.945259</td>
-<td align="left">Under $11k</td>
-<td align="left">Medicare</td>
-<td align="left">MOSF w/Sepsis</td>
-<td align="right">21.05078</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="right">0.4369998</td>
-<td align="right">72</td>
-<td align="right">41</td>
-<td align="right">78.39996</td>
-<td align="right">34.79688</td>
-<td align="right">65</td>
-<td align="right">27</td>
-<td align="right">125</td>
-<td align="right">478.0000</td>
-<td align="right">17</td>
-<td align="right">7.229492</td>
-<td align="right">29.6992188</td>
-<td align="right">24.00000</td>
-<td align="right">126</td>
-<td align="right">5.799805</td>
-<td align="right">3.5996094</td>
-<td align="right">1.0097656</td>
-<td align="right">3.500000</td>
-<td align="left">No</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">86.07794</td>
-<td align="left">Female</td>
-<td align="left">white</td>
-<td align="right">8.000000</td>
-<td align="left">Under $11k</td>
-<td align="left">Medicare</td>
-<td align="left">COPD</td>
-<td align="right">17.50000</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0.6650000</td>
-<td align="right">38</td>
-<td align="right">0</td>
-<td align="right">54.89999</td>
-<td align="right">39.19531</td>
-<td align="right">115</td>
-<td align="right">36</td>
-<td align="right">134</td>
-<td align="right">184.1875</td>
-<td align="right">68</td>
-<td align="right">7.299805</td>
-<td align="right">18.0000000</td>
-<td align="right">30.50000</td>
-<td align="right">138</td>
-<td align="right">5.399414</td>
-<td align="right">1.3999023</td>
-<td align="right">1.0097656</td>
-<td align="right">3.099609</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">6</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="index.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span></code></pre></div>
-<pre><code>##  [1] &quot;Er&quot;             &quot;estORx&quot;         &quot;exposure&quot;       &quot;ext_var&quot;        &quot;formulaOut&quot;     &quot;i&quot;              &quot;nSim&quot;          
-##  [8] &quot;Oformula&quot;       &quot;outcome&quot;        &quot;PlasmodeBinSim&quot; &quot;plasmodeData.i&quot; &quot;rhc&quot;            &quot;RHScov&quot;         &quot;saveOR&quot;        
-## [15] &quot;simdata&quot;        &quot;simdata.obj&quot;    &quot;vars&quot;           &quot;Yr&quot;</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="index.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
-<p>We will use this data to show how to implement a plasmode simulation <span class="citation">(<a href="#ref-franklin2014plasmode" role="doc-biblioref">Franklin et al. 2014</a>)</span> in a binary exposure / outcome data</p>
-<p>See other details in this <a href="http://links.lww.com/EDE/B300">appendix A.7</a></p>
+<div id="plasmode-simulation" class="section level1" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Plasmode simulation</h1>
+<p>Healthcare claims databases contain numerous (usually thousands) collected variables. Simulating such a high-dimensional dataset is problematic in a Monte Carlo study because it is difficult to recreate a realistic data generating process that takes into account of associations among a large number of covariates under consideration. Plasmode is a simulation technique that relies on resampling techniques to obtain data that can preserve the empirical associations among the covariates. During the process of plasmode simulation, the analyst can assign a desired value for the true treatment effect in the data generating process. Such a plasmode study begins with an existing cohort, with an assumed data generating process, as in the following equation, and we can modify the existing cohort and injected known effects (signals) into it.</p>
+<p><span class="math display">\[\begin{eqnarray}\label{plasmodeequation}
+{logit\big[Pr(Y = 1)\big] = \alpha_0 + \theta \times \alpha_1 T + \gamma \times \alpha_2 X,}
+\end{eqnarray}\]</span>
+where <span class="math inline">\(Y\)</span> is the outcome (e.g., all-cause mortality following an acute myocardial infarction), <span class="math inline">\(T\)</span> is the treatment indicator (whether or not the patient being treated with statin), <span class="math inline">\(X\)</span> is the high-dimensional covariate matrix that includes the important investigator-specified covariates (listed in eTable ), additional investigator-specified covariates (listed in eTable ) and the list of created empirical covariates obtained by running the hdPS algorithm on the complete statin user dataset with <span class="math inline">\(32,792\)</span> patients. These empirical variables should act as proxy or surrogate of the unmeasured confounders. As for the parameters in equation (), <span class="math inline">\(\alpha_0\)</span> is the intercept, <span class="math inline">\(\alpha_1\)</span> is the treatment effect, <span class="math inline">\(\alpha_2\)</span> is the vector of effects associated with covariates listed in <span class="math inline">\(X\)</span>, <span class="math inline">\(\theta\)</span> is the treatment effect multiplier and <span class="math inline">\(\gamma\)</span> is the covariate effect multiplier.</p>
+<p>The plasmode simulation algorithm samples exposed and unexposed subjects with replacement from the empirical dataset in such a way that guarantees a desired study size (<span class="math inline">\(m\)</span>) and a prevalence of exposure (<span class="math inline">\(p_E\)</span>) in the simulated plasmode samples <span class="citation">(<a href="#ref-franklin2014plasmode" role="doc-biblioref">J. M. Franklin et al. 2014</a>, <a href="#ref-franklin2015regularized" role="doc-biblioref">2015</a>; <a href="#ref-franklin2017comparing" role="doc-biblioref">Jessica M. Franklin et al. 2017</a>)</span>. Also, this simulation algorithm allows researchers to specify the intercept value in the outcome-generating model to guarantee a desired prevalence of outcome (<span class="math inline">\(p_Y\)</span>) <span class="citation">(<a href="#ref-franklin2014plasmode" role="doc-biblioref">J. M. Franklin et al. 2014</a>, <a href="#ref-franklin2015regularized" role="doc-biblioref">2015</a>)</span>.</p>
+<p>Methodologically, the plasmode simulation realistically generates the data by controlling the relationship with outcome by retaining <span class="math inline">\(\alpha_2\)</span> estimates (parameter estimates associates with the covariates) in the outcome generation model (equation ()) same as the estimates obtained from the empirical data fitting. The plasmode simulation uses resampling techniques such as bootstrap to select patients in a specific sample with replacement. Here, the bootstrap samples (of specified size <span class="math inline">\(m\)</span>) are collected from the complete set of covariate-exposure matrix <span class="math inline">\(Z = (T,X)\)</span>. As none of these variables in the covariate-exposure matrix, <span class="math inline">\(Z\)</span> are permuted or modified in any way, in each bootstrap sample (of a reasonable size), systematically, the relationships should remain intact among exposure and covariates <span class="citation">(<a href="#ref-franklin2014plasmode" role="doc-biblioref">J. M. Franklin et al. 2014</a>)</span>. Therefore, relationship with covariates and outcomes are controlled by fixing <span class="math inline">\(\alpha_2\)</span> values in the outcome generation model and boostrap ensures joint distribution of exposure and covariates are unaltered, there should not be any obvious reason why the relationship among covariates and exposure should be different in plasmode samples. In that sense, in the plasmode simulation, the `amount of confounding’ from a covariate (i.e., relationship of a covariate with the outcome as well as the exposure; both of which relationships are required for a covariate to be considered as a confounder) is controlled <span class="citation">(<a href="#ref-franklin2014plasmode" role="doc-biblioref">J. M. Franklin et al. 2014</a>)</span>.</p>
+<p>However, among other things, this simulation mechanism do allow researchers to change the multipliers of the treatment effect and the covariate effects by changing <span class="math inline">\(\theta\)</span> parameter value and <span class="math inline">\(\gamma\)</span> parameter vector respectively. In certain combination of these parameters values, it is possible that an important confounder in the empirical study may not remain important in the plasmode samples. Future research should investigate further in this issue. Plasmode simulations are built based on a given empirical data setting, and the generalizability of the results is an issue for such simulations. See <span class="citation"><a href="#ref-karim2018can" role="doc-biblioref">Karim, Pang, and Platt</a> (<a href="#ref-karim2018can" role="doc-biblioref">2018</a>)</span> as an exmple of the use of plasmode simulation.</p>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-connors1996effectiveness" class="csl-entry">
-Connors, Alfred F, Theodore Speroff, Neal V Dawson, Charles Thomas, Frank E Harrell, Douglas Wagner, Norman Desbiens, et al. 1996. <span>“The Effectiveness of Right Heart Catheterization in the Initial Care of Critically III Patients.”</span> <em>Jama</em> 276 (11): 889–97. <a href="https://tinyurl.com/Connors1996">https://tinyurl.com/Connors1996</a>.
+<div id="ref-franklin2015regularized" class="csl-entry">
+Franklin, J. M., W. Eddings, R. J. Glynn, and S. Schneeweiss. 2015. <span>“Regularized Regression Versus the High-Dimensional Propensity Score for Confounding Adjustment in Secondary Database Analyses.”</span> <em>American Journal of Epidemiology</em> 182 (7): 651–59.
 </div>
 <div id="ref-franklin2014plasmode" class="csl-entry">
-Franklin, Jessica M, Sebastian Schneeweiss, Jennifer M Polinski, and Jeremy A Rassen. 2014. <span>“Plasmode Simulation for the Evaluation of Pharmacoepidemiologic Methods in Complex Healthcare Databases.”</span> <em>Computational Statistics &amp; Data Analysis</em> 72: 219–26.
+Franklin, J. M., S. Schneeweiss, J. M. Polinski, and J. A. Rassen. 2014. <span>“Plasmode Simulation for the Evaluation of Pharmacoepidemiologic Methods in Complex Healthcare Databases.”</span> <em>Computational Statistics &amp; Data Analysis</em> 72: 219–26.
+</div>
+<div id="ref-franklin2017comparing" class="csl-entry">
+Franklin, Jessica M, Wesley Eddings, Peter C Austin, Elizabeth A Stuart, and Sebastian Schneeweiss. 2017. <span>“Comparing the Performance of Propensity Score Methods in Healthcare Database Studies with Rare Outcomes.”</span> <em>Statistics in Medicine</em>. <a href="https://doi.org/10.1002/sim.7250">https://doi.org/10.1002/sim.7250</a>.
+</div>
+<div id="ref-karim2018can" class="csl-entry">
+Karim, Mohammad Ehsanul, Menglan Pang, and Robert W Platt. 2018. <span>“Can We Train Machine Learning Methods to Outperform the High-Dimensional Propensity Score Algorithm?”</span> <em>Epidemiology</em> 29 (2): 191–98.
 </div>
 </div>
             </section>
@@ -690,7 +245,7 @@ Franklin, Jessica M, Sebastian Schneeweiss, Jennifer M Polinski, and Jeremy A Ra
         </div>
       </div>
 
-<a href="user-written-function.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-load.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -744,6 +299,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

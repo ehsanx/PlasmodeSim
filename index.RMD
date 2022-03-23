@@ -20,11 +20,24 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+# Plasmode simulation
 
+Healthcare claims databases contain numerous (usually thousands) collected variables. Simulating such a high-dimensional dataset is problematic in a Monte Carlo study because it is difficult to recreate a realistic data generating process that takes into account of associations among a large number of covariates under consideration. Plasmode is a simulation technique that relies on resampling techniques to obtain data that can preserve the empirical associations among the covariates. During the process of plasmode simulation, the analyst can assign a desired value for the true treatment effect in the data generating process. Such a plasmode study begins with an existing cohort, with an assumed data generating process, as in the following equation, and we can modify the existing cohort and injected known effects (signals) into it.
+
+\begin{eqnarray}\label{plasmodeequation}
+{logit\big[Pr(Y = 1)\big] = \alpha_0 + \theta \times \alpha_1 T + \gamma \times \alpha_2 X,}
+\end{eqnarray}
+where $Y$ is the outcome (e.g., all-cause mortality following an acute myocardial infarction), $T$ is the treatment indicator (whether or not the patient being treated with statin), $X$ is the high-dimensional covariate matrix that includes the important investigator-specified covariates (listed in eTable \ref{tab1}), additional investigator-specified covariates (listed in eTable \ref{tab1b}) and the list of created empirical covariates obtained by running the hdPS algorithm on the complete statin user dataset with $32,792$ patients. These empirical variables should act as proxy or surrogate of the unmeasured confounders. As for the parameters in equation (\ref{plasmodeequation}), $\alpha_0$ is the intercept, $\alpha_1$ is the treatment effect, $\alpha_2$ is the vector of effects associated with covariates listed in $X$, $\theta$ is the treatment effect multiplier and $\gamma$ is the covariate effect multiplier. 
+
+The plasmode simulation algorithm samples exposed and unexposed subjects with replacement from the empirical dataset in such a way that guarantees a desired study size ($m$) and a prevalence of exposure ($p_E$) in the simulated plasmode samples [@franklin2014plasmode;@franklin2015regularized;@franklin2017comparing]. Also, this simulation algorithm allows researchers to specify the intercept value in the outcome-generating model to guarantee a desired prevalence of outcome ($p_Y$) [@franklin2014plasmode;@franklin2015regularized].
+
+Methodologically, the plasmode simulation realistically generates the data by controlling the relationship with outcome by retaining $\alpha_2$ estimates (parameter estimates associates with the covariates) in the outcome generation model (equation (\ref{plasmodeequation})) same as the estimates obtained from the empirical data fitting. The plasmode simulation uses resampling techniques such as bootstrap to select patients in a specific sample with replacement. Here, the bootstrap samples (of specified size $m$) are collected from the complete set of covariate-exposure matrix $Z = (T,X)$. As none of these variables in the covariate-exposure matrix, $Z$ are permuted or modified in any way, in each bootstrap sample (of a reasonable size), systematically, the relationships should remain intact among exposure and covariates [@franklin2014plasmode]. Therefore, relationship with covariates and outcomes are controlled by fixing $\alpha_2$ values in the outcome generation model and boostrap ensures joint distribution of exposure and covariates are unaltered, there should not be any obvious reason why the relationship among covariates and exposure should be different in plasmode samples. In that sense, in the plasmode simulation, the `amount of confounding' from a covariate (i.e., relationship of a covariate with the outcome as well as the exposure; both of which relationships are required for a covariate to be considered as a confounder) is controlled [@franklin2014plasmode].
+
+However, among other things, this simulation mechanism do allow researchers to change the multipliers of the treatment effect and the covariate effects by changing $\theta$ parameter value and $\gamma$ parameter vector respectively. In certain combination of these parameters values, it is possible that an important confounder in the empirical study may not remain important in the plasmode samples. Future research should investigate further in this issue. Plasmode simulations are built based on a given empirical data setting, and the generalizability of the results is an issue for such simulations. See @karim2018can as an exmple of the use of plasmode simulation. 
 
 # Data load
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 require(plyr) 
 require(stringr)
 require(mgcv)

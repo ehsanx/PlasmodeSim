@@ -58,7 +58,7 @@ We will use this data to show how to implement a plasmode simulation [@franklin2
 
 # User-written Function
 
-See @franklin2015regularized  
+See @franklin2015regularized. All necessary files (e.g., PlasmodeSim.R) are in the [github repo](https://github.com/ehsanx/PlasmodeSim).  
 
 ```{r, cache= TRUE}
 # Plasmode simulation

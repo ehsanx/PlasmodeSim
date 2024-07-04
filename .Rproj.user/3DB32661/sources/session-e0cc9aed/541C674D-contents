@@ -1,0 +1,19 @@
+# Define a function to source a script in a new environment
+run_script_clean <- function(script_path) {
+  env <- new.env()  # Create a new environment
+  source(script_path, local = env)  # Source the script in the new environment
+}
+
+# List of script paths
+scripts <- c(#"E:/GitHub/DeepLearningPS/reRun2024/simulations/4sim-AE-OER.R",
+             #"E:/GitHub/DeepLearningPS/reRun2024/simulations/2sim-earth-OR1.R",
+             #"E:/GitHub/DeepLearningPS/reRun2024/simulations/3sim-PSReg-OR1.R",
+             #"E:/GitHub/DeepLearningPS/reRun2024/simulations/5sim-DL-comp.R",
+             "E:/GitHub/DeepLearningPS/reRun2024/simulations/5sim-DL-OR1.R",
+             "E:/GitHub/DeepLearningPS/reRun2024/simulations/4sim-AE-OR1.R")
+
+# Run each script in its own clean environment
+for (script in scripts) {
+  run_script_clean(script)
+}
+

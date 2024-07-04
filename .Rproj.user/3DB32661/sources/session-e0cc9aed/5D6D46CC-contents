@@ -1,0 +1,185 @@
+setwd("E:/GitHub/DeepLearningPS/reRun2024/simulations")
+require(MatchIt)
+require(jtools)
+require(earth)
+require(Plasmode)
+require(dplyr)
+library(factoextra)
+library(parallel)
+library(pbapply)
+
+make_ids_unique <- function(ids) {
+  dup_ids <- ids[duplicated(ids) | duplicated(ids, fromLast = TRUE)]
+  unique_dup_ids <- unique(dup_ids)
+  for (id in unique_dup_ids) {
+    suffix <- 1
+    indices <- which(ids == id)
+    for (index in indices) {
+      ids[index] <- paste0(ids[index], ".", suffix)
+      suffix <- suffix + 1
+    }
+  }
+  return(ids)
+}
+
+subscript <- ""
+base_dir <- paste0("results", subscript)
+intermediate_dir <- paste0(base_dir, "/intermediate")
+if (!dir.exists(base_dir)) {
+  dir.create(base_dir) 
+}
+if (!dir.exists(intermediate_dir)) {
+  dir.create(intermediate_dir)
+}
+
+
+rhc_prep3 <- readRDS(file = "rhc_prep3.rds")
+simdata <- readRDS(paste0("simdata", subscript, ".rds"))
+theta <- .7
+nSim <- 1000
+x.var <- c("age", "sex.Female", "race.black", "race.other", "edu", "income.25..50k", 
+           "income...50k", "incomeUnder..11k", "ninsclasMedicare", "ninsclasMedicare...Medicaid", 
+           "ninsclasNo.insurance", "ninsclasPrivate", "ninsclasPrivate...Medicare", 
+           "cat1.CHF", "cat1.Other", "cat1.MOSF", "respYes", "cardYes", 
+           "neuroYes", "gastrYes", "renalYes", "metaYes", "hemaYes", "sepsYes", 
+           "traumaYes", "orthoYes", "das2d3pc", "dnr1Yes", "ca.Localized..Yes.", 
+           "ca.Metastatic", "surv2md1", "aps1", "scoma1", "wtkilo1", "temp1", 
+           "meanbp1", "resp1", "hrt1", "pafi1", "paco21", "ph1", "wblc1", 
+           "hema1", "sod1", "pot1", "crea1", "bili1", "alb1", "cardiohx", 
+           "chfhx", "dementhx", "psychhx", "chrpulhx", "renalhx", "liverhx", 
+           "gibledhx", "malighx", "immunhx", "transhx", "amihx")
+
+pc.discard <- p.discard <- rep(NA, nSim)
+blank.vect <- rep(NA, nSim)
+simResults <- data.frame(est = blank.vect, est.SE = blank.vect, modelSE = blank.vect,
+                         est.pVal = blank.vect,  
+                         est.LowCI = blank.vect, est.HiCI = blank.vect, 
+                         p.discard = blank.vect)
+simResults.c <- simResults.a <- simResults
+simdata$X <- NULL
+exposure <- "tx"
+
+simulate <- function(i, simdata, rhc_prep3, x.var, exposure, nSim) {
+  print(paste("Starting simulation", i))  # Debug
+  plasmodeData.i <- left_join(x = data.frame(id = simdata[,i], EVENT = simdata[,i+nSim]), y = rhc_prep3, by = "id")
+  plasmodeData.i$death <- plasmodeData.i$EVENT
+  plasmodeData.i$EVENT <- NULL
+  plasmodeData.i$X.1 <- NULL
+  plasmodeData.i$X <- NULL
+  plasmodeData.i$id <- make_ids_unique(plasmodeData.i$id)
+  n <- nrow(plasmodeData.i)
+  
+  print(paste("Number of rows in plasmodeData.i:", n))  # Debug
+  
+  ps.results <- tryCatch({
+    ps.formula <- as.formula(paste0(exposure, "~", paste(x.var, collapse = "+")))
+    PS.fit <- earth(ps.formula, data = plasmodeData.i)
+    plasmodeData.i$PS <- predict(PS.fit, newdata = plasmodeData.i)
+    lower_bound <- 0
+    upper_bound <- 1
+    plasmodeData.i$PS <- pmax(lower_bound, pmin(upper_bound, plasmodeData.i$PS))
+    logitPS <- -log(1 / plasmodeData.i$PS - 1) 
+    match.obj <- matchit(ps.formula, data = plasmodeData.i, distance = 'logit', method = "nearest", replace = FALSE, caliper = .2 * sd(logitPS), ratio = 1)
+    plasmodeData.i$PS <- NULL
+    matched.data <- match.data(match.obj)
+    
+    crude <- glm(as.formula(paste0("death", "~", exposure)), family = binomial(link = "logit"), weights = weights, data = matched.data)
+    results.c <- summ(crude, robust = "HC0", confint = TRUE, digits = 3, cluster = "subclass", model.info = FALSE, model.fit = FALSE, exp = TRUE)$coeftable[exposure,]
+    
+    est <- as.numeric(results.c["exp(Est.)"])
+    est.pVal <- as.numeric(results.c["p"])
+    est.LowCI <- as.numeric(results.c["2.5%"])
+    est.HiCI <- as.numeric(results.c["97.5%"])
+    est.SE <- as.numeric(summ(crude, robust = "HC0", confint = FALSE, digits = 3, cluster = "subclass", model.info = FALSE, model.fit = FALSE, exp = TRUE)$coeftable[exposure,"S.E."])
+    est.SE.check <- summary(crude)$coef["tx", "Std. Error"]
+    p.discard <- (n - nrow(matched.data)) / n * 100
+    
+    adj <- glm(as.formula(paste0("death", "~", exposure, "+", paste(x.var, collapse = "+"))), family = binomial(link = "logit"), weights = weights, data = matched.data)
+    results.a <- summ(adj, robust = "HC0", confint = TRUE, digits = 3, cluster = "subclass", model.info = FALSE, model.fit = FALSE, exp = TRUE)$coeftable[exposure,]
+    est2 <- as.numeric(results.a["exp(Est.)"])
+    est.pVal2 <- as.numeric(results.a["p"])
+    est.LowCI2 <- as.numeric(results.a["2.5%"])
+    est.HiCI2 <- as.numeric(results.a["97.5%"])
+    est.SE2 <- as.numeric(summ(adj, robust = "HC0", confint = FALSE, digits = 3, cluster = "subclass", model.info = FALSE, model.fit = FALSE, exp = TRUE)$coeftable[exposure,"S.E."])
+    est.SE.check2 <- summary(adj)$coef["tx","Std. Error"]
+    
+    res.ps <- as.data.frame(matrix(c(est, est.SE, est.SE.check, est.pVal, est.LowCI, est.HiCI, p.discard, est2, est.SE2, est.SE.check2, est.pVal2, est.LowCI2, est.HiCI2, p.discard), nrow = 2, byrow = TRUE))
+    rownames(res.ps) <- c("crude", "adj")
+    names(res.ps) <- c("est", "SE", "modelSE", "p", "L", "U", "d")
+    res.ps
+  },
+  error = function(e) { 
+    print(paste("Error in simulation", i, ":", e))  # Debug
+    res.ps2 <- as.data.frame(matrix(NA, nrow = 2, ncol = 7))
+    rownames(res.ps2) <- c("crude", "adj")
+    names(res.ps2) <- c("est", "SE", "modelSE", "p", "L", "U", "d")
+    res.ps2
+  })
+  saveRDS(ps.results, file = paste0(intermediate_dir, "/intermediate_result_", i, ".rds"))
+  simResults.c[i,] <- ps.results["crude",]
+  simResults.a[i,] <- ps.results["adj",]
+  
+  res.list <- list(
+    e.c = simResults.c,
+    e.a = simResults.a
+  )
+  
+  return(res.list)
+}
+
+# Initialize the cluster
+no_cores <- detectCores() - 2  
+cl <- makeCluster(no_cores)
+
+# Export necessary variables and functions to the cluster
+clusterExport(cl, varlist = c("simulate", "simdata", "rhc_prep3", "x.var", "exposure", "nSim", "make_ids_unique", "simResults", "simResults.c", "simResults.a", "intermediate_dir"))
+
+# Load necessary libraries on each worker node
+clusterEvalQ(cl, {
+  library(dplyr)
+  library(MatchIt)
+  library(jtools)
+  library(factoextra)
+  library(pbapply)
+  library(earth)
+  library(Plasmode)
+})
+
+# Use pblapply to run the simulations in parallel with a progress bar
+results <- tryCatch({
+  pblapply(1:nSim, simulate, cl = cl, simdata = simdata, rhc_prep3 = rhc_prep3, nSim = nSim, x.var = x.var, exposure = exposure)
+}, error = function(e) {
+  print(paste("Error in pblapply:", e))
+  stopCluster(cl)  # Ensure the cluster is stopped in case of error
+  NULL
+})
+
+# Stop the cluster
+stopCluster(cl)
+
+
+# Initialize an empty list to store the "adj" rows
+adj_rows_list <- list()
+
+# Loop through all 1000 files
+for (i in 1:nSim) {
+  # Construct the file path for each file
+  file_path <- paste0(intermediate_dir, "intermediate_result_", i, ".rds")
+  
+  # Read the RDS file
+  intermediate_result <- readRDS(file_path)
+  
+  # Extract the "adj" row and add it to the list
+  adj_rows_list[[i]] <- intermediate_result["adj", ]
+}
+
+# Convert the list of "adj" rows to a matrix
+adj_matrix <- do.call(rbind, adj_rows_list)
+
+# Print the resulting matrix
+print(adj_matrix)
+
+  
+# Save aggregated results
+# saveRDS(aggregatedResults$ps_c, file = paste0(base_dir, "/simResults_c_earth.rds"))
+saveRDS(adj_matrix, file = paste0(base_dir, "/simResults_a_earth.rds"))

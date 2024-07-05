@@ -1,0 +1,27 @@
+# Create a data frame with the c-statistic ranges and corresponding descriptions
+discrimination_data <- data.frame(
+  description = c("No better than random chance", 
+                  "Acceptable discrimination ability",
+                  "Excellent discrimination ability", 
+                  "Outstanding discrimination ability"),
+  xmin = c(0.5, 0.7, 0.8, 0.9),
+  xmax = c(0.7, 0.8, 0.9, 1.0)
+)
+colors <- c("grey", "lightblue", "lightgreen", "gold")
+names(colors) <- discrimination_data$description
+ggplot(discrimination_data) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = 0, ymax = 1, fill = description), alpha = 0.5) +
+  scale_fill_manual(values = colors) +
+  scale_x_continuous(breaks = c(0.5, 0.7, 0.8, 0.9, 1.0)) +
+  labs(
+    title = "Discrimination Ability Based on C-Statistic Values",
+    x = "Time-dependent C-Statistic Value",
+    y = "",
+    fill = "Description"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank(), legend.position = "none") +
+  annotate("text", x = 0.6, y = 0.5, label = "No better than\nrandom chance", size = 4) +
+  annotate("text", x = 0.75, y = 0.5, label = "Acceptable\ndiscrimination ability", size = 4) +
+  annotate("text", x = 0.85, y = 0.5, label = "Excellent\ndiscrimination ability", size = 4) +
+  annotate("text", x = 0.95, y = 0.5, label = "Outstanding\ndiscrimination ability", size = 4)

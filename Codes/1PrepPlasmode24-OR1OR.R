@@ -34,7 +34,7 @@ simdata.obj <- PlasmodeBin(formulaOut,
                            effectOR =theta,
                            nsim=nSim,
                            size=3500,
-                           eventRate=0.3,
-                           exposedPrev=0.05)
+                           eventRate=0.05,
+                           exposedPrev=0.3)
 simdata <- simdata.obj$Sim_Data
 saveRDS(simdata, "data/simdata-OR1OR.rds")

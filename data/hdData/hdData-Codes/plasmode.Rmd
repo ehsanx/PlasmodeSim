@@ -1,0 +1,145 @@
+---
+title: "Plasmode"
+author: "Ehsan Karim, ehsan.karim@ubc.ca, https://ehsank.com/"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+always_allow_html: yes
+output:
+  html_document:
+    fig_caption: yes
+    keep_md: yes
+    toc: yes
+    number_sections: true
+    toc_depth: 2
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    theme: lumen
+    highlight: textmate
+  pdf_document:
+    fig_caption: yes
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+    toc_depth: 3
+  word_document:
+    toc: yes
+  slidy_presentation:
+    toc: yes  
+tags:
+- NHANES
+- R
+- RStudio
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(SASxport)
+require(DiagrammeR)
+require(DiagrammeRsvg)
+require(rsvg)
+library(magrittr)
+library(svglite)
+library(png)
+require(nhanesA)
+require(survey)
+require(Publish)
+require(jtools)
+```
+
+# Load data
+
+```{r, cache=TRUE}
+load(file = "data/fullData.RData") 
+table(full.data$exposure)/sum(table(full.data$exposure))
+table(full.data$outcome)/sum(table(full.data$outcome))
+# table(full.data$exposure[full.data$outcome == 0])/
+#   sum(table(full.data$exposure[full.data$outcome == 0]))
+# table(full.data$outcome[full.data$exposure == 0])/
+#   sum(table(full.data$outcome[full.data$exposure == 0]))
+length(demovars)
+demoform
+length(labvars.original) 
+labvars.originalform
+length(labvars)
+labform
+length(sel.proxy)
+sel.proxy.form
+length(emp.cov.names)
+basicdata <- full.data[,c("idx", 
+                          demovars,
+                          labvars.original)]
+extendeddata <- full.data[,c("idx", 
+                             demovars,
+                             labvars.original,
+                             emp.cov.names)]
+```
+
+# Create simple count variable
+
+```{r, cache=TRUE}
+full.data$simple.count <- apply(full.data[sel.proxy], 1, sum)
+summary(full.data$simple.count)
+hist(full.data$simple.count)
+```
+
+# Setup formulas
+
+```{r, cache=TRUE}
+rhsformula <- paste0(c(demoform, labform, "simple.count"), collapse = "+")
+rhsformula
+```
+
+
+```{r init1, eval=TRUE, cache=TRUE}
+formulaOut <- as.formula(paste0("outcome ~ exposure +", rhsformula))
+formulaOut
+```
+# Initial plasmode
+
+```{r, cache=TRUE}
+require(Plasmode)
+ss <- 3000
+# from https://cran.r-project.org/src/contrib/Archive/Plasmode/Plasmode_0.1.0.tar.gz
+set.seed(111)
+simdata.obj0 <- PlasmodeBin(formulaOut,
+                       data=full.data,
+                       idVar="idx",
+                       nsim=1, 
+                       size=ss, 
+                       eventRate=0.2, 
+                       exposedPrev=0.40)
+simdata.obj0$TrueOutBeta
+length(simdata.obj0$TrueOutBeta)
+simdata.obj0$RR
+simdata.obj0$RD
+```
+# Plasmode simulation
+
+```{r, cache=TRUE}
+nSim <- 1000
+set.seed(111)
+simdata.obj <- PlasmodeBin(formulaOut,
+                       data=full.data,
+                       idVar="idx",
+                       effectOR =1,
+                       nsim=nSim, 
+                       size=ss, 
+                       eventRate=0.3, 
+                       exposedPrev=0.3,
+                       MMOut = c(rep(1, length(simdata.obj0$TrueOutBeta)-2), 5))
+simdata.obj$TrueOutBeta
+exp(simdata.obj$TrueOutBeta)
+simdata.obj$RR
+simdata.obj$RD
+```
+
+
+```{r, cache=TRUE}
+simdata <- simdata.obj$Sim_Data 
+```
+
+# Save
+
+```{r save, eval=TRUE, cache=TRUE}
+save.image(file = "data/plasmode.RData")
+```

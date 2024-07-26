@@ -1,0 +1,179 @@
+---
+title: "Preparing data with modified Lab variables"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+always_allow_html: yes
+output:
+  html_document:
+    fig_caption: yes
+    keep_md: yes
+    toc: yes
+    number_sections: true
+    toc_depth: 2
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    theme: lumen
+    highlight: textmate
+  pdf_document:
+    fig_caption: yes
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+    toc_depth: 3
+  word_document:
+    toc: yes
+  slidy_presentation:
+    toc: yes  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car)
+#library(dplyr)
+library(readr)
+library(DataExplorer)
+library(tableone)
+library(Publish)
+library(jtools)
+require(mice)
+require(autoCovariateSelection)
+require(data.table)
+# BiocManager::install("GenomicRanges")
+require(GenomicRanges)
+```
+
+
+# Load data
+
+```{r, cache=TRUE}
+load(file = "data/analyticData.RData") 
+load(file = "data/EmpCovData.RData")
+load(file = "data/hdPSData.RData") 
+ls()
+```
+
+# List variables
+
+```{r, cache=TRUE}
+demovars <- c("age.cat",  # Age
+  "sex",  # Sex
+  "education",  # Education
+  "race", # Race/ethnicity 
+  "marital",  # Marital status
+  "income",  # Family yearly income
+  "born",  # Where born / citizenship 
+  "diabetes.family.history",    # Family history of diabetes
+  "high.cholesterol",  # High cholesterol
+  "smoking",    # Smoking status
+  "diet.healthy",  # How healthy is the diet 
+  "physical.activity",  # Vigorous physical activity 
+  "medical.access",    # Access to routine healthcare
+  "sleep") # sleep
+# demographic variables in a formula
+demoform <- paste0(demovars, collapse = "+")
+demoform
+```
+
+# Modifications
+
+```{r, cache=TRUE}
+# exposure
+emp.cov.data$exposure <- relevel(as.factor(emp.cov.data$obese), ref = "No")
+emp.cov.data$exposure <- ifelse(emp.cov.data$exposure == "No", 0 ,1)
+# outcome
+emp.cov.data$outcome <- relevel(as.factor(emp.cov.data$diabetes), ref = "No")
+emp.cov.data$outcome <- ifelse(emp.cov.data$outcome == "No", 0 ,1)
+# original lab variables
+labvars.original <- c("uric.acid", 
+                      "protein.total", 
+                      "bilirubin.total", 
+                      "phosphorus",
+                      "sodium", 
+                      "potassium", 
+                      "globulin", 
+                      "calcium.total", 
+                      #"high.cholesterol",
+                      "systolicBP", 
+                      "diastolicBP")
+labvars.original
+labvars.originalform <- paste0(labvars.original, collapse = "+")
+# modified lab variables
+emp.cov.data$l1 <- with(emp.cov.data, (log(globulin)))
+emp.cov.data$l2 <- with(emp.cov.data, (protein.total*calcium.total))
+emp.cov.data$l3 <- with(emp.cov.data, (diastolicBP/systolicBP)^2)
+emp.cov.data$l4 <- with(emp.cov.data, sqrt(uric.acid+bilirubin.total)/2)
+emp.cov.data$l5 <- with(emp.cov.data, (phosphorus^1.75/(sodium*potassium)))
+emp.cov.data$l6 <- with(emp.cov.data, log(systolicBP+10))
+# Summarize modified lab variables
+summary(emp.cov.data$l1)
+summary(emp.cov.data$l2)
+summary(emp.cov.data$l3)
+summary(emp.cov.data$l4)
+summary(emp.cov.data$l5)
+summary(emp.cov.data$l6)
+# modified lab variables in a formula
+labvars <- paste0("l",1:6)
+labform <- paste0(labvars, collapse = "+")
+labform
+```
+
+
+```{r, cache=TRUE}
+# select empirical covariates that have RR of < 0.8 
+# or > 1.2 compared with the outcome
+y <- as.logical(as.vector(emp.cov.data$outcome))
+df.emp <- emp.cov.data[c("idx", emp.cov.names)]
+rcd <- get_relative_risk(df = df.emp, outcomeVec = y)
+var.list.emp <- data.frame(var = emp.cov.names, rr = rcd)
+dim(var.list.emp)
+var.list.emp2 <- var.list.emp[order(abs(var.list.emp$rr), decreasing = TRUE), ]
+var.list.emp3 <- subset(var.list.emp2, rr < 0.8 | rr > 1.2)
+dim(var.list.emp3)
+sel.proxy <- var.list.emp3$var
+sel.proxy.form <- paste0(sel.proxy, collapse = "+")
+length(sel.proxy)
+length(hdps.names[hdps.names %in% sel.proxy])
+length(sel.proxy[sel.proxy %in% hdps.names])
+sel.proxy.form
+```
+
+
+```{r, eval=FALSE, echo=FALSE}
+# # Select only hdPS selected variables
+# sel.proxy <- hdps.names
+# sel.proxy.form <- paste0(sel.proxy, collapse = "+")
+# length(notable.proxy)
+# length(sel.proxy)
+# sel.proxy.form
+# ----
+# select only those proxies that are highly associated with the outcome
+# notable.proxy <- emp.cov.names[apply(emp.cov.data[,emp.cov.names], 2, sum) >= 200]
+# proxy.phicoef <- double(length(emp.cov.names))
+# names(proxy.phicoef) <- emp.cov.names
+# y <- as.logical(as.vector(emp.cov.data$outcome))
+# for (i in 1:length(emp.cov.names)){
+#   x <- as.logical(emp.cov.data[,emp.cov.names][,i])
+#   proxy.phicoef[i] <- phicoef(x,y)
+# }
+# hist(proxy.phicoef)
+# notable.proxy <- names(proxy.phicoef[proxy.phicoef > 0.01 | proxy.phicoef < -0.01])
+# sel.proxy <- notable.proxy[grepl("once", notable.proxy)]
+# sel.proxy.form <- paste0(sel.proxy, collapse = "+")
+# length(notable.proxy)
+# length(sel.proxy)
+# sel.proxy.form
+# length(hdps.names[hdps.names %in% sel.proxy])
+# length(sel.proxy[sel.proxy %in% hdps.names])
+```
+
+
+# Save
+
+```{r save, eval=TRUE, cache=TRUE}
+full.data <- emp.cov.data
+save(demovars, demoform, labvars, labform, 
+     labvars.original, labvars.originalform,
+     sel.proxy, sel.proxy.form, emp.cov.names,
+     full.data, 
+     file = "data/fullData.RData") 
+```

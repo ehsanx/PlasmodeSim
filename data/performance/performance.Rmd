@@ -1,0 +1,160 @@
+---
+title: "Summary of Performance Measures"
+author: "Ehsan"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+  pdf_document:
+    toc: true
+    toc_depth: 2
+---
+
+
+## Read data
+
+- Keep the data in the `results` folder
+- make sure working directory is updated
+
+```{r data}
+library(rsimsum)
+est.PS <- readRDS("results/simResults_a_ps-OR1.rds")
+est.PS <- est.PS[,c("est", "modelSE")]
+names(est.PS) <- c("estimate", "se")
+est.PS$model <- "PS"
+est.MARS <- readRDS("results/simResults_a_earth-OR1.rds")
+est.MARS <- est.MARS[,c("est", "SE")]
+names(est.MARS) <- c("estimate", "se")
+est.MARS$model <- "MARS"
+```
+
+## Combine data into 1 data
+
+Make sure table provides same numbers for all model. For full analysis, all should be 1,000.
+
+```{r bind}
+est <- rbind(est.PS, est.MARS) 
+est$model <- as.factor(est$model)
+table(est$model)
+names(est)
+```
+
+## Analyze simulated data
+
+```{r sim}
+theta <- 0 # for RD or ATE; this would be 1 for OR
+s1 <- simsum(data = est, estvarname = "estimate", true = theta, se = "se", 
+             methodvar = "model", ref = "PS", x = TRUE)
+ss1 <- summary(s1)
+ss1
+```
+
+## Present results in a Table
+
+change `kable(final_df, format = "html" ...` to `kable(final_df, format = "latex"` to get the latex codes.
+
+```{r table, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(kableExtra)
+
+extract_metric <- function(metric) {
+  # Function to extract and format metric data
+  metric_data <- ss1$summ[ss1$summ$stat == metric, c("model", "est", "mcse")]
+  metric_data$est <- sprintf("%.4f", metric_data$est)
+  metric_data$mcse <- sprintf("%.4f", metric_data$mcse)
+  metric_data$formatted <- paste0(metric_data$est, " (", metric_data$mcse, ")")
+  metric_data <- metric_data[, c("model", "formatted")]
+  names(metric_data) <- c("model", metric)
+  return(metric_data)
+}
+
+metrics <- c("bias", "empse", "mse", "modelse", "cover", "becover")
+formatted_metrics <- lapply(metrics, extract_metric)
+combined_df <- Reduce(function(x, y) merge(x, y, by = "model"), formatted_metrics)
+final_df <- combined_df %>%
+  gather(key = "metric", value = "value", -model) %>%
+  spread(key = "model", value = "value")
+final_df$metric <- recode(final_df$metric,
+                          bias = "Bias",
+                          empse = "Empirical SE",
+                          mse = "MSE",
+                          modelse = "Model-based SE",
+                          cover = "Coverage",
+                          becover = "Bias-eliminated Coverage")
+final_df <- final_df %>%
+  arrange(factor(metric, levels = c("Bias", "Empirical SE", "MSE", "Model-based SE", "Coverage", "Bias-eliminated Coverage"))) %>%
+  rename(`Performance Measure` = metric)
+names(final_df) <- c("Performance Measure", "MARS", "PS")
+kable(final_df, format = "html", booktabs = TRUE, linesep = "", col.names = c("Performance Measure", "MARS", "PS"),
+      caption = "Summary of Performance Measures") %>%
+  kable_styling(latex_options = c("striped", "hold_position"), full_width = FALSE)
+```
+
+
+## Present results in Figures
+
+All figures also saved in the `images` folder.
+
+```{r plots, warning=FALSE, message=FALSE}
+require(ggplot2)
+
+custom_theme <- theme_minimal() + 
+  theme(
+    panel.background = element_rect(fill = "white"),  
+    panel.grid.major = element_blank(),              
+    panel.grid.minor = element_blank(),              
+    legend.position = "bottom"                      
+  )
+
+unique(ss1$summ$stat)
+autoplot(s1, type = "lolly", stats = "nsim")+ custom_theme
+autoplot(s1, type = "lolly", stats = "bias")+ custom_theme  + labs(x = "Bias")
+ggsave(filename = "images/bias.png")
+autoplot(s1, type = "lolly", stats = "relerror")+ custom_theme  + labs(x = "Relative % error")
+autoplot(s1, type = "lolly", stats = "cover")+ custom_theme  + labs(x = "95% coverage")
+ggsave(filename = "images/cover.png")
+autoplot(s1, type = "lolly", stats = "becover")+ custom_theme  + labs(x = "95% bias-eliminated coverage")
+ggsave(filename = "images/becover.png")
+autoplot(s1, type = "lolly", stats = "modelse")+ custom_theme + labs(x = "Model SE")
+ggsave(filename = "images/modelse.png")
+autoplot(s1, type = "lolly", stats = "empse")+ custom_theme  + labs(x = "Empirical SE")
+ggsave(filename = "images/empse.png")
+autoplot(s1, type = "lolly", stats = "mse")+ custom_theme + labs(x = "MSE")
+autoplot(s1, type = "lolly", stats = "relprec")+ custom_theme
+autoplot(s1, type = "lolly", stats = "power")+ custom_theme
+zip_plot <- autoplot(s1, type = "zip", zoom = 0.5) + custom_theme
+dashed_line <- geom_hline(yintercept = 0.95, linetype = "dashed", color = "blue")
+zip_plot + 
+  annotate("segment", x = -Inf, xend = Inf, y = 0.95, yend = 0.95, linetype = "dashed", color = "blue") +
+  dashed_line
+ggsave(filename = "images/zip.png")
+```
+
+## SE comparison
+
+```{r plotSE, warning=FALSE, message=FALSE}
+library(reshape2)
+library(tidyr)
+
+data <- s1$summ %>%
+  filter(stat %in% c("empse", "modelse")) %>%
+  select(model, stat, est) %>%
+  pivot_wider(names_from = stat, values_from = est)
+
+melted_data <- data %>%
+  pivot_longer(cols = -model, names_to = "variable", values_to = "value")
+
+ggplot(melted_data, aes(x = model, y = value, fill = factor(variable, levels = c("empse", "modelse")))) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  coord_flip() + # Makes the bar plots horizontal
+  labs(y = "SE", x = "model", fill = "SE") +
+  scale_fill_manual(
+    values = c("empse" = "lightgray", "modelse" = "darkgray"), 
+    labels = c("empse" = "Empirical SE", "modelse" = "Model SE")
+  ) +
+  custom_theme
+ggsave(filename = "images/secompare.png")
+```

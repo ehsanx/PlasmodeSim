@@ -1,0 +1,849 @@
+# Step 1: Proxy sources
+
+::: callout-tip
+# Load saved data
+
+We saved `analytic3cycles.RData` in [Appendix](NHANES.qmd). This contained the following datasets:
+
+-   `data.merged` = merged data from 3 cycles,
+-   `data.complete` = complete case merged data,
+-   `dat.proxy.long` = only proxy information
+:::
+
+```{r, cache=TRUE}
+load("data/analytic3cycles.RData")
+```
+
+## Data with investigator-specified variables
+
+::: callout-tip
+# Data: part 1
+
+We will work with the `data.complete` data for the investigator-specified information.
+:::
+
+```{r, cache=TRUE}
+analytic <- data.complete
+idx <- analytic$id
+outcome <- as.numeric(analytic$diabetes == "Yes") 
+exposure <- as.numeric(analytic$obese == "Yes")
+domain <- "dx"
+analytic.dfx <- as.data.frame(cbind(idx, exposure, outcome, domain))
+```
+
+::: column-margin
+We prepare the minimal analytic data only with the following 4 information:
+
+-   identifying information (`idx`)
+-   exposure (`obese`)
+-   outcome (`diabetes`)
+-   domain of the codes (`dx`). In this example we only have prescription domain (1 domain `dx`)
+:::
+
+## Proxy data
+
+### Identify the data dimensions (proxy sources)
+
+In this example we only have <mark>prescription domain</mark> (1 domain `dx` of ICD-10-CM code). Hence <mark>$p = 1$</mark> in this exercise.
+
+::: column-margin
+NHANES Questionnaire collects information on: (a) dietary supplements, (b) nonprescription antacids, (c) prescription medications, and (d) preventive aspirin use.
+:::
+
+### Define a covariate assessment period (CAP)
+
+We only collect proxy information from a well-defined CAP. In our case, it was <mark>$30$ days</mark>.
+
+::: column-margin
+NHANES asked "In the past 30 days, have you used or taken medication for which a prescription is needed? Do not include prescription vitamins or minerals you may have already told me about."
+:::
+
+::: callout-tip
+# Data: part 2
+
+We will work with the merge proxy data (ICD-10 codes) from 3 cycles: `dat.proxy.long`.
+:::
+
+### Omit duplicated information
+
+::: column-margin
+We need to delete codes that could be close proxies of exposure and/or outcome, or other investigator specified covariates we have already selected in step0.
+:::
+
+```{r, cache=TRUE}
+dat.proxy.long <- subset(dat.proxy.long, 
+                         icd10 != "E66") # Overweight and obesity
+dat.proxy.long <- subset(dat.proxy.long, 
+                         icd10 != "O24") # Gestational diabetes mellitus
+dat.proxy.long <- subset(dat.proxy.long, 
+                         icd10 != "E10") # Type 1 diabetes mellitus
+dat.proxy.long <- subset(dat.proxy.long, 
+                         icd10 != "E11") # Type 2 diabetes mellitus
+```
+
+::: column-margin
+-   We delete codes associated with exposure and outcome.
+-   Same should be done for any other proxies that may have duplicating information compared to the investigator-specified covariates.
+:::
+
+### Long format proxy data
+
+```{r, cache=TRUE, echo=FALSE}
+proxy.var.long <- dat.proxy.long
+proxy.var.long$idx <- proxy.var.long$id
+proxy.var.long$id <- NULL
+```
+
+::: column-margin
+Here is an example of 3 digit codes for 1 patient with subject ID "100001". We create the same for all patients.
+:::
+
+```{r, cache=TRUE, echo=FALSE}
+library(magrittr)
+library(kableExtra)
+# data.for.patient100001 <- proxy.var.long[proxy.var.long$idx == 	100001,]
+icd.codes <- c("F33", "I10", "M62", "F32", "M25", "K21", "M79", "R12")
+icd.meaning <- c("Major depressive disorder, recurrent", "Hypertension", "Muscle spasm" , "Major depressive disorder, single episode", "Joint disorder/pain", "Gastro-esophageal reflux disease", "musculoskeletal pain conditions", "	Heartburn")
+icd.id <- "100001"
+data.for.patient100001 <- cbind(icd.id, icd.codes, icd.meaning)
+colnames(data.for.patient100001) <- c("ID", "ICD 10 codes (3 digit)", "Description")
+knitr::kable(data.for.patient100001) %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
+  kableExtra::column_spec(2, width = "3cm", extra_css = "text-align:center;")
+```
+
+## Merge Proxy data with Analytic data
+
+::: callout-tip
+# Merged Data: parts 1 and 2
+
+-   We will work with the merge proxy data with analytic data.
+-   That will provide us with the IDs (`idx`) of the subject that have proxy (ICD-10) information associated with them.
+:::
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+require(dplyr) 
+dfx <- merge(analytic.dfx, proxy.var.long, by = "idx")
+head(dfx)
+basetable <- dfx %>% select(idx, exposure, outcome) %>% distinct()
+patientIds <- basetable$idx
+length(patientIds)
+```
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, file = "data/dfx.RData")
+```
+
+
+# Step 2: Empirical
+
+Based on the merged dataset, we identify which patients were linked in both databases. Using those IDs, we want to sort the list of candidate empirical covariates.
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+load(file = "data/dfx.RData")
+```
+
+## Sort by prevalence
+
+Check out the frequency of each codes:
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+library(dplyr)
+df <- data.frame(
+  icd10 = names(sort(table(dfx$icd10), decreasing = TRUE)),
+  count = sort(table(dfx$icd10), decreasing = TRUE)
+)
+```
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+library(knitr)
+library(kableExtra)
+# print the table using kable()
+# knitr::kable(df[1:10,-2], col.names = c("ICD10 Code", "Count"), align = c("l", "r"))
+kable(df[1:10,-2], col.names = c("ICD10 Code", "Count"), align = c("l", "r"), caption = "ICD10 Code Frequencies") %>%
+  kable_styling(bootstrap_options =  c("striped", "hover"), full_width = FALSE) %>%
+  row_spec(0, bold = TRUE) %>%
+  column_spec(2, width = "5em")
+```
+
+::: column-margin
+Only top 10 prevalent codes are shown.
+:::
+
+However, some may be associated with lower counts (e.g., less than 20).
+
+::: callout-tip
+# Restrictions
+
+Candidate empirical covariates list is constrained by
+
+(1) their prevalence of codes. <mark>Only top `n` covariates with highest prevalence</mark> would be chosen.
+(2) analysts absolutely need to get rid of the codes that have <mark>zero variance</mark> (e.g., everyone has the code, or nobody has it).
+(3) codes associated with <mark>very low prevalence</mark> are also numerically problematic for further analyses.
+:::
+
+::: column-margin
+We choose `n = 200` \[for (1)\] as it was proposed in the original algorithm. In reality, this is not necessary to be so restrictive. Parts (2) and (3) are more likely and addressed by the following restriction: At least `min_num_patients` number of patients need to have that code to be selected in the list.
+:::
+
+If there were more dimensions, separate list of candidate empirical covariates would be identified.
+
+## Choose Granularity
+
+One important point here is that we have chosen <mark>granularity to be 3 digits</mark> in the ICD-10 code.
+
+::: column-margin
+We have already truncated the codes at 3 digit level while preparing the data.
+:::
+
+## Retain top n empirical covariates
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+require(autoCovariateSelection)
+step1 <- get_candidate_covariates(df = dfx,  
+                                  domainVarname = "domain",
+                                  eventCodeVarname = "icd10", 
+                                  patientIdVarname = "idx",
+                                  patientIdVector = patientIds,
+                                  n = 200, 
+                                  min_num_patients = 20)
+```
+
+::: column-margin
+You can use `autoCovariateSelection` package to implement these restrictions.
+:::
+
+### Long format data
+
+```{r, cache=TRUE}
+out1 <- step1$covars_data
+head(out1)
+```
+
+### Updated frequency data
+
+```{r, cache=TRUE}
+df2 <- data.frame(
+  icd10 = names(table(out1$icd10)),
+  count = as.numeric(table(out1$icd10))
+)
+```
+
+```{r, cache=TRUE, echo=FALSE}
+# display the data frame as a table
+knitr::kable(head(df2), col.names = c("ICD10 Code", "Count"), align = c("l", "r"))%>%
+  kable_styling(bootstrap_options =  c("striped", "hover"), full_width = FALSE)
+```
+
+::: column-margin
+Only first few code frequencies are shown (alphabetic order), that were selected based on the restrictions `n` = 200 and `min_num_patients` = 20.
+:::
+
+```{r, cache=TRUE, echo=FALSE}
+# display the data frame as a table
+knitr::kable(tail(df2), col.names = c("ICD10 Code", "Count"), align = c("l", "r"))%>%
+  kable_styling(bootstrap_options =  c("striped", "hover"), full_width = FALSE)
+```
+
+::: column-margin
+Only last few code frequencies are shown (alphabetic order).
+:::
+
+### Total number of codes retained
+
+```{r, cache=TRUE}
+nrow(df2)
+```
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, df, df2, step1, out1, 
+     file = "data/dfx2.RData")
+```
+
+# Step 3: Recurrence
+
+## Genrate recurrence covariates
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+load(file = "data/dfx2.RData")
+```
+
+In this step, we generate <mark>3 binary recurrence covariates</mark> for each of the candidate empirical covariates identified in the previous step:
+
+-   occurred at least once
+-   occurred sporadically (at least more than the median)
+-   occurred frequently (at least more than the 75th percentile)
+
+```{r, cache=TRUE}
+step2 <- get_recurrence_covariates(df = out1, 
+                                   patientIdVarname = "idx",
+                                   eventCodeVarname = "icd10", 
+                                   patientIdVector = patientIds)
+```
+
+## Example of recurrence covariates
+
+```{=html}
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) td:nth-child(1){
+    background-color: #f2f2f2;
+  }
+  
+  th {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+</style>
+```
+| ICD-10-CM code (dimension 1)  | code appeared at least once | code appeared at least more than the median | code appeared at least more than the 75th percentile |
+|------------------|------------------|------------------|------------------|
+| **D64.9** Anemia              | rec_dx_D64_once             | rec_dx_D64_sporadic                         | rec_dx_D64_frequent                                  |
+| **D75.9P** Blood clots        | rec_dx_D75_once             | rec_dx_D75_sporadic                         | rec_dx_D75_frequent                                  |
+| **D89.9** Immune disorder     | rec_dx_D89_once             | rec_dx_D89_sporadic                         | rec_dx_D89_frequent                                  |
+| $\ldots$                      | $\ldots$                    | $\ldots$                                    | $\ldots$                                             |
+| **E07.9** Disorder of thyroid | rec_dx_E07_once             | rec_dx_E07_sporadic                         | rec_dx_E07_frequent                                  |
+
+::: column-margin
+Example of 3 binary covariates (hypothetical) created based on the candidate empirical covariates.
+:::
+
+## Recurrence covariates in the data
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+out2 <- step2$recurrence_data
+ncol(out2)
+names(out2)
+```
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+data.show.x <- out2[,c("rec_dx_B20_once", "rec_dx_B20_frequent")]
+rows_with_nonzero <- rowSums(data.show.x) > 0
+tail(data.show.x[rows_with_nonzero, ])
+```
+
+::: column-margin
+Here we show <mark>binary recurrence covariates</mark> for only 2 columns
+:::
+
+## Refined recurrence covariates
+
+Below you can click to see a list of all recurrence covariates obtained in our data.
+
+```{r, results='asis', echo=FALSE}
+names_list <- names(step2$recurrence_data)[-1]
+
+n <- length(names_list)
+ncols <- 3
+nrows <- ceiling(n / ncols)
+
+# Create matrix with data
+data_mat <- matrix(c(names_list, rep("", nrows*ncols-n)), nrow=nrows, ncol=ncols, byrow=TRUE)
+
+# Convert to data.frame
+data_df <- as.data.frame(data_mat)
+
+# Add rownames
+rownames(data_df) <- 1:nrows
+
+cat('<button onclick="toggleTable()">Show/Hide Table</button>\n')
+
+cat('<div class="toggle-table" style="display:none">\n')
+knitr::kable(data_df, col.names=NULL, align="c", caption="ICD-10 Recurrence Data",
+             booktabs=TRUE, row.names=TRUE)
+cat('</div>\n')
+
+cat('<script>
+function toggleTable() {
+  var x = document.getElementsByClassName("toggle-table")[0];
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>\n')
+```
+
+::: callout-tip
+-   Given that we had one dimension of proxy data, $p=1$, at most $n=200$ most prevalent codes (with the restriction that minimum number of patients in each code = 20), and $3$ intensity, we could theoretically have at most $p \times n \times 3 = 1 \times 200 \times \ 3 = 600$ recurrence covariates.
+:::
+
+-   Based on all of the restrictions, we created <mark>143 distinct recurrence covariates</mark>.
+-   The merged data (analytic and proxies) size is now 7,585.
+
+::: column-margin
+- If 2 or all 3 recurrence covariates are identical, only <mark>one distinct recurrence covariate</mark> is returned. This is why you do not see any sporadic recurrence covariate here.
+- Recurrence covariate creation is for each patient, and it is possible to have same code occur multiple time because we are working with a 3 digit granularity (possible to have medications from other codes within same ICD-10 3 digit granularity).
+:::
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2,
+     file = "data/dfx3.RData")
+```
+
+# Step 4: Prioritize
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+load(file = "data/dfx3.RData")
+```
+
+## Bross formula
+
+We need to make an educated guess about 3 components (i.e., <mark>make an assumption</mark>), that are used in the calculation of <mark>bias contributed by not adjusting for a covariate</mark> based on [Bross (1966)](https://pubmed.ncbi.nlm.nih.gov/5966011/) formula:
+
+::: column-margin
+Bross formula for the Bias Multiplier considers both the imbalance in the prevalence of the unmeasured confounder between the exposure groups and the association between the confounder and the outcome to assess the potential bias.
+:::
+
+-   prevalence of a binary unmeasured confounder ($U$) among exposed ($P_{UA_1}$)
+-   prevalence of that binary unmeasured confounder among unexposed ($P_{UA_0}$)
+-   association between that binary unmeasured confounder and the outcome ($RR_{UY} = \frac{P_{UY_1}}{P_{UY_1}}$)
+
+The above components can help us calculate $bias$ amount (known as <mark>'Bias Multiplier'</mark>) using the Bross formula when we omit adjusting for $U$:
+
+$$\text{Bias}_U = \frac{P_{UA_1} (RR_{UY} - 1) + 1}{P_{UA_0} (RR_{UY} - 1) + 1}$$
+
+::: column-margin
+These are the ingredients of the Bross formula. This formula is helpful for understanding the impact of unmeasured confounding of a binary variable. We have to put assumed prevalence and risk ratio associated with an unmeasured confounder.
+:::
+
+## Calculating bias from a recurrence covariate
+
+For recurrence covariates ($R$), we do not need to assume, we just <mark>plug-in $R$ instead of $U$</mark> in the following calculations:
+
+-   prevalence of a binary recurrence variable among exposed ($P_{RA_1}$)
+-   prevalence of that binary recurrence variable among unexposed ($P_{RA_0}$)
+-   association between that binary recurrence variable and the outcome ($RR_{RY} = \frac{P_{RY_1}}{P_{RY_1}}$)
+
+These components can help us empirically calculate $bias$ amount:
+
+$$\text{Bias}_R = \frac{P_{RA_1} (RR_{RY} - 1) + 1}{P_{RA_0} (RR_{RY} - 1) + 1}$$
+
+Here, $RR_{RY}$ is the crude risk ratio between the recurrence covariate and the outcome, $Y$ is the outcome, $A$ is the exposure, and $R$ is a recurrence covariate.
+
+::: column-margin
+For recurrence covariates, we do not need to assume, we can basically calculate these numbers ($log-absolute-bias$) for all of the recurrence covariates. For each data dimension, we can rank each of the recurrence covariates based on the amount of bias (confounding or imbalance) it could likely adjust.
+:::
+
+## Calculating bias from all recurrence covariates
+
+In our example, we simply plug-in each recurrence covariates one-by-one to calculate $log-absolute-bias$:
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+var <- c("R=rec_dx_D64_once", "R=rec_dx_D75_sporadic", " ... ", "R=rec_dx_E07_frequent")
+knitr::kable(var, col.names = NULL, row.names = FALSE, 
+             format = "pipe", align = "c")
+```
+
+## Obtain log of absolute-bias
+
+We calculate $log-absolute-bias$ for all recurrence covariates.
+
+::: column-margin
+Absolute log of the Bias Multiplier, $log-absolute-bias$, is a symmetric measure of the potential bias introduced by the recurrence covariate, making it easier to compare and rank recurrence covariates.
+:::
+
+```{r, cache=TRUE}
+out3 <- get_prioritised_covariates(df = out2,
+                                   patientIdVarname = "idx", 
+                                   exposureVector = basetable$exposure,
+                                   outcomeVector = basetable$outcome,
+                                   patientIdVector = patientIds, 
+                                   k = 100)
+sorted_values <- sort(out3$multiplicative_bias, 
+                      decreasing = TRUE)
+```
+
+This would return absolute log of the multiplicative bias for each recurrence covariate (by univariate Bross formula). We can use this information to prioritize recurrence covariates in the next step.
+
+## Convert to Absolute log of multiplicative bias
+
+Here are the few covariates and associated Absolute log of the multiplicative bias:
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+library(dplyr)
+library(knitr)
+library(kableExtra)
+# Determine the number of rows and columns needed for the table
+n <- length(sorted_values)
+num_cols <- 1
+num_rows <- ceiling(n / num_cols)
+
+# Create an empty table
+tbl <- matrix("", nrow = num_rows, ncol = num_cols)
+
+# Fill in the table with the names and values of the top biases
+for (i in 1:n) {
+  row <- ceiling(i / num_cols)
+  col <- i %% num_cols
+  if (col == 0) col <- num_cols
+  tbl[row, col] <- paste(names(sorted_values)[i], ":", round(sorted_values[i], 3))
+}
+
+# Print the table
+colnames(tbl) <- c("")
+#knitr::kable(tbl[1:9,])
+knitr::kable(tbl[1:9,], col.names = NULL, row.names = FALSE, 
+             format = "pipe", align = "c") %>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+And here are translated table with description:
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+my_table <- data.frame(
+  col1 = c("Hypertension : 0.115",
+           "Edema : 0.054",
+           "Hypokalemia : 0.015"),
+  col2 = c("Elevated blood glucose level : 0.088",
+           "Pure hypercholesterolemia : 0.038",
+           "Heart disease : 0.013"),
+  col3 = c("Hypertension : 0.068",
+           "musculoskeletal pain : 0.017",
+           "Heart failure : 0.011")
+)
+# print the table
+#knitr::kable(my_table)
+library(tidyr)
+
+# Reshape data into long format
+my_table_long <- pivot_longer(my_table, cols = everything(), 
+                              names_to = "Column", values_to = "Value")
+# Remove column names
+colnames(my_table_long) <- c("", "")
+# Print as a column vector
+knitr::kable(my_table_long[,2], col.names = NULL, row.names = FALSE, 
+             format = "pipe", align = "c")%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+
+```
+
+::: column-margin
+Some of the empirical covariates with top Absolute log of the multiplicative bias are actually relevant to the outcome (diabetes): Hypertension, Elevated blood glucose level , etc. 
+:::
+
+::: callout-tip
+# SMD vs Bias multiplier
+
+Standardized mean difference (SMD) is useful for assessing the balance in the propensity score literature. However, Bross formula incorporates outcome information. In the investigation of empirical covariates or recurrence covariates where interpretations of these covariates are unknown, it may seem more safe to use the multiplicative bias term from the Bross formula to identify proxy covariates that are helpful in predicting the outcome.
+:::
+
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2, out3,
+     file = "data/dfx4.RData")
+```
+
+# Step 5: Covariates
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+require(cobalt)
+library(ggplot2)
+require(WeightIt)
+library(lmtest)
+load(file = "data/dfx4.RData")
+```
+
+We select 2 types of covariates for the next step (to analyze using propensity score or other alternative approaches):
+
+## Ideal number of prioritised covariates
+
+Based on calculated $log-absolute-bias$, we select top `k` recurrence covariates to be used in the hdPS analyses later. 
+
+We used $k = 100$ covariates selected by the hdPS algorithm (we call them 'hdPS covariates'). <mark>What should be the cutpoint?</mark>
+
+::: column-margin
+- Absolute log of the Bias Multiplier has a null value of 0. Anything above 0 is an indication of confounding bias adjusted by the adjustment of the associated recurrent covariate. 
+- For large proxy data sources, $k = 500$ is suggested. 
+- See [Sensitivity Analysis](sens.qmd) section for an understanding of how to choose a value based on an ad-hoc process.
+:::
+
+## Selected hdPS variables (proxies)
+
+```{r, cache=TRUE}
+hdps.dim <- out3$autoselected_covariate_df
+dim(hdps.dim) # id + k
+head(hdps.dim)[,1:3]
+hdps.dim$id <- hdps.dim$idx
+hdps.dim$idx <- NULL
+```
+
+## Investigator-specified covariates
+
+$25$ investigator-specified covariates are selected based on variables in the DAG that are available in the data set.
+
+::: column-margin
+We should also add necessary interactions of these investigator-specified covariates, or add other useful model-specifications (e.g., polynomials).
+:::
+
+::: column-margin
+-   14 demographic, behavioral, health history related variables/access
+    -   Mostly **categorical**
+-   11 lab variables
+    -   Mostly **continuous**
+:::
+
+```{r, cache=TRUE}
+exposure <- "obese"
+outcome <- "diabetes" 
+investigator.specified.covariates <- 
+  c(# Demographic
+  "age.cat", "sex", "education", "race", 
+  "marital", "income", "born", "year",
+  
+  # health history related variables/access
+  "diabetes.family.history", "medical.access",
+  
+  # behavioral
+  "smoking", "diet.healthy", "physical.activity", "sleep",
+  
+  # Laboratory 
+  "uric.acid", "protein.total", "bilirubin.total", "phosphorus",
+  "sodium", "potassium", "globulin", "calcium.total", 
+  "systolicBP", "diastolicBP", "high.cholesterol"
+)
+length(investigator.specified.covariates)
+```
+
+## Merged data
+
+```{r, cache=TRUE}
+load("data/analytic3cycles.RData")
+hdps.data <- merge(data.complete[,c("id",
+                                    outcome, 
+                                    exposure, 
+                                    investigator.specified.covariates)], 
+                       hdps.dim, by = "id")
+dim(hdps.data)
+```
+
+::: column-margin
+Variable count (128)
+
+-   1 ID variable
+-   1 exposure
+-   1 outcome
+-   25 investigator-specified covariates
+-   100 hdPS variables
+:::
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2, out3,
+     hdps.data, exposure, outcome, investigator.specified.covariates, 
+     data.complete, file = "data/dfx5.RData")
+```
+
+# Step 6: Propensity
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+require(cobalt)
+library(ggplot2)
+require(WeightIt)
+library(lmtest)
+load(file = "data/dfx5.RData")
+```
+
+## hdPS model
+
+::: column-margin
+C = investigator-specified covariates and EC = hdPS covariates
+:::
+
+Then the hdPS can be used as matching, weighting, stratifying variables, or as covariates (usually in deciles) in outcome model.
+
+### Create propensity score formula
+
+```{r, cache=TRUE}
+hdps.data$exposure <- as.numeric(I(hdps.data$obese=='Yes'))
+hdps.data$outcome <- as.numeric(I(hdps.data$diabetes=='Yes'))
+proxy.list.sel <- names(out3$autoselected_covariate_df[,-1])
+length(proxy.list.sel)
+proxyform <- paste0(proxy.list.sel, collapse = "+")
+covform <- paste0(investigator.specified.covariates, collapse = "+")
+```
+
+```{r, cache=TRUE}
+rhsformula <- paste0(c(covform, proxyform), collapse = "+")
+ps.formula <- as.formula(paste0("exposure", "~", rhsformula))
+ps.formula
+```
+
+::: column-margin
+This is an overly simplistic scenario where we are adding only the main effects in the non-transformed form.
+:::
+
+### Fit PS model
+
+```{r, cache=TRUE}
+require(WeightIt)
+W.out <- weightit(ps.formula, 
+                    data = hdps.data, 
+                    estimand = "ATE",
+                    method = "ps")
+```
+
+### Obtain PS
+
+```{r, cache=TRUE}
+hdps.data$ps <- W.out$ps
+```
+
+```{r, cache=TRUE, echo=FALSE}
+ggplot(hdps.data, aes(x = ps, fill = factor(exposure))) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("darkblue", "darkred")) +
+  theme_classic() 
+```
+
+::: column-margin
+Always a good idea to check propensity score overlap in both exposure groups
+:::
+
+### Obtain Weights
+
+```{r, cache=TRUE, warning=FALSE, message=FALSE}
+hdps.data$w <- W.out$weights
+```
+
+```{r, cache=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(hdps.data, aes(x = "", y = w)) +
+  geom_boxplot(fill = "lightblue", 
+               color = "blue", 
+               size = 1) +
+  geom_text(aes(x = 1, y = max(w), 
+                label = paste0("Max = ", round(max(w), 2))), 
+            vjust = 1.5, 
+            hjust = -0.3, 
+            size = 4, 
+            color = "red") +
+  geom_text(aes(x = 1, y = min(w), 
+                label = paste0("Min = ", round(min(w), 2))), 
+            vjust = -2.5, 
+            hjust = -0.3, 
+            size = 4, 
+            color = "red") +
+  ggtitle("Boxplot of Inverse Probability Weights") +
+  xlab("") +
+  ylab("Weights") +
+  theme_classic() 
+```
+
+::: column-margin
+Always a good idea to check the summary statistics of the weights to assess whether there are extreme weights
+:::
+
+### Assessing balance
+
+```{r, cache=TRUE, echo=FALSE, fig.width=5, fig.height=15}
+require(cobalt)
+love.plot(x = W.out,
+          thresholds = c(m = .1), 
+          var.order = "unadjusted",
+          stars = "raw") 
+```
+
+::: column-margin
+Always a good idea to assess balance. Here we are measuring against SMD 0.1. Use `love.plot` function from the `cobalt` package. See more descriptions of balanced diagnostics [elsewhere](https://ehsanx.github.io/psw/balance.html) for a propensity score context.
+:::
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+W.out0 <- W.out
+save(W.out0, file = "data/Wout0.RData")
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2, out3,
+     hdps.data, exposure, outcome, investigator.specified.covariates,
+     proxyform, W.out, proxy.list.sel,data.complete,
+     file = "data/dfx6.RData")
+```
+
+# Step 7: Association
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+require(cobalt)
+library(ggplot2)
+require(WeightIt)
+library(lmtest)
+load(file = "data/dfx6.RData")
+```
+
+### Set outcome formula
+
+```{r, cache=TRUE}
+out.formula <- as.formula(paste0("outcome", "~", "exposure"))
+out.formula
+```
+
+### Obtain OR from unadjusted model
+
+```{r, cache=TRUE, warning=FALSE, message=FALSE}
+fit <- glm(out.formula,
+            data = hdps.data,
+            weights = W.out$weights,
+            family= binomial(link = "logit"))
+fit.summary <- summary(fit)$coef["exposure",
+                                 c("Estimate", 
+                                   "Std. Error", 
+                                   "Pr(>|z|)")]
+fit.ci <- confint(fit, level = 0.95)["exposure", ]
+fit.summary_with_ci <- c(fit.summary, fit.ci)
+knitr::kable(t(round(fit.summary_with_ci,2))) 
+```
+
+::: column-margin
+-   We are using a crude outcome model here.
+-   Somewhat controversial to adjust for all (investigator-specified and all 100 proxies) covariates.
+:::
+
+### Obtain RD from unadjusted model
+
+```{r, cache=TRUE, warning=FALSE, message=FALSE}
+fit <- glm(out.formula,
+            data = hdps.data,
+            weights = W.out$weights,
+            family= gaussian(link = "identity"))
+fit.summary <- summary(fit)$coef["exposure",
+                                 c("Estimate", 
+                                   "Std. Error", 
+                                   "Pr(>|t|)")]
+fit.summary[2] <- sqrt(sandwich::sandwich(fit)[2,2])
+require(lmtest)
+conf.int <- confint(fit, "exposure", level = 0.95, method = "hc1")
+fit.summary <- c(fit.summary, conf.int)
+knitr::kable(t(round(fit.summary, 2))) 
+```
+
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+fit.summary_with_ci.hdps <- fit.summary_with_ci
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2, out3,
+     hdps.data, exposure, outcome, investigator.specified.covariates,
+     proxyform, W.out, proxy.list.sel,fit.summary_with_ci.hdps,
+     data.complete, file = "data/dfx7.RData")
+```

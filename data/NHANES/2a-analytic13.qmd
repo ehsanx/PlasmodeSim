@@ -1,0 +1,431 @@
+# Recoding cycle 8
+
+Creating analytic dataset from 2013-14 cycle
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nhanesA)
+library(car)
+library(plyr)
+library(dplyr)
+```
+
+## Load downloaded dataset
+
+```{r, cache=TRUE}
+load(file = "data/analytic13.RData")
+```
+
+## Recoding
+
+### ID
+
+```{r, cache=TRUE}
+dat2 <- nhanes13
+dat2$id <- dat2$SEQN
+```
+
+### Demographic
+
+#### Age
+
+```{r, cache=TRUE}
+dat2$age <- dat2$RIDAGEYR
+dat2$age.cat <- car::recode(dat2$age, " 0:19 = '<20'; 20:49 = '20-49'; 50:64 = '50-64'; 
+                            65:80 = '65+'; else = NA ")
+dat2$age.cat <- factor(dat2$age.cat, levels = c("<20", "20-49", "50-64", "65+"))
+table(dat2$age.cat, useNA = "always")
+```
+
+#### Sex
+
+```{r, cache=TRUE}
+dat2$sex <- dat2$RIAGENDR
+table(dat2$sex, useNA = "always")
+```
+
+#### Education
+
+```{r, cache=TRUE}
+dat2$education <- dat2$DMDEDUC2
+# table(dat2$DMDEDUC2, useNA = "always")
+dat2$education <- as.factor(dat2$education)
+dat2$education <- car::recode(dat2$education, recodes = "c('College graduate or above') = 'College graduate or above'; c('Some college or AA degree', 'High school graduate/GED or equivalent') = 'High school'; c('Less than 9th grade', '9-11th grade (Includes 12th grade with no diploma)') = 'Less than high school'; else = NA")
+dat2$education <- factor(dat2$education, 
+                         levels = c("Less than high school", "High school", 
+                                    "College graduate or above"))
+table(dat2$education, useNA = "always")
+```
+
+#### Race/ethnicity
+
+```{r, cache=TRUE}
+dat2$race <- dat2$RIDRETH1
+dat2$race <- car::recode(dat2$race, recodes = " 'Non-Hispanic White'='White';
+                    'Non-Hispanic Black'='Black'; c('Mexican American',
+                    'Other Hispanic')= 'Hispanic'; else='Others' ")
+dat2$race <- factor(dat2$race, levels = c("White", "Black", "Hispanic", "Others"))
+table(dat2$race, useNA = "always")
+```
+
+#### Marital status
+
+```{r, cache=TRUE}
+dat2$marital <- dat2$DMDMARTL
+dat2$marital <- car::recode(dat2$marital, recodes = " 'Never married'='Never married';
+c('Married', 'Living with partner') = 'Married/with partner'; 
+                            c('Widowed', 'Divorced', 'Separated')='Other'; else=NA ")
+dat2$marital <- factor(dat2$marital, levels = c("Never married", "Married/with partner",
+                                                "Other"))
+table(dat2$marital, useNA = "always")
+```
+
+#### Income
+
+```{r, cache=TRUE}
+dat2$income <- dat2$INDHHIN2
+dat2$income  <- car::recode(dat2$income, recodes = " c('$ 0 to $ 4,999', '$ 5,000 to $ 9,999',
+'$10,000 to $14,999', '$15,000 to $19,999', 'Under $20,000')='less than $20,000';
+                       c('Over $20,000','$20,000 and Over', '$20,000 to $24,999', 
+                       '$25,000 to $34,999', '$35,000 to $44,999', '$45,000 to $54,999', 
+                       '$55,000 to $64,999', '$65,000 to $74,999')='$20,000 to $74,999';
+                       c('$75,000 to $99,999','$100,000 and Over')='$75,000 and Over'; 
+                            else=NA ")
+dat2$income  <- factor(dat2$income , levels=c("less than $20,000", "$20,000 to $74,999", 
+                                              "$75,000 and Over"))
+table(dat2$income, useNA = "always")
+```
+
+#### Where born / citizenship
+
+```{r, cache=TRUE}
+dat2$born <- dat2$DMDBORN4
+dat2$born <- car::recode(dat2$born, recodes = " 'Others'='Other place';
+                       'Born in 50 US states or Washington, DC'= 'Born in US'; else=NA")
+dat2$born <- factor(dat2$born, levels = c("Born in US", "Other place"))
+table(dat2$born, useNA = "always") 
+```
+
+#### Pregnancy
+
+```{r}
+dat2$pregnancy <- dat2$RIDEXPRG
+dat2$pregnancy <- car::recode(dat2$pregnancy, 
+                      recodes = " 'Yes, positive lab pregnancy test' = 'Yes';
+                       'The participant was not pregnant' = 'No'; 
+                       'Cannot ascertain if the particip' = 'inconclusive';
+                       else= 'outside of target population'  ")
+table(dat2$pregnancy, useNA = "always") 
+```
+
+### BMI
+
+#### BMI and Obesity
+
+```{r, cache=TRUE}
+dat2$bmi <- dat2$BMXBMI
+summary(dat2$bmi)
+dat2$obese <- ifelse(dat2$BMXBMI >= 30, "Yes", "No")
+dat2$obese <- factor(dat2$obese, levels = c("No", "Yes"))
+table(dat2$obese, useNA = "always")
+```
+
+### Diabetes
+
+```{r, cache=TRUE}
+dat2$diabetes <- dat2$DIQ010
+dat2$diabetes <- car::recode(dat2$diabetes, " 'Yes'='Yes'; c('No','Borderline')='No';
+                             else=NA ")
+
+# Taking insulin now or diabetic pills to lower blood sugar - they have diabetes
+dat2$diabetes[dat2$DIQ050 == "Yes"] <- "Yes"
+dat2$diabetes[dat2$DIQ070 == "Yes"] <- "Yes"
+table(dat2$diabetes, useNA = "always")
+```
+
+### Family history of diabetes
+
+```{r, cache=TRUE}
+dat2$diabetes.family.history <- car::recode(dat2$DIQ175A, " 'Family history' = 'Yes'; 
+                             else = 'No' ")
+dat2$diabetes.family.history <- factor(dat2$diabetes.family.history, levels = c("No", "Yes"))
+dat2$diabetes.family.history[dat2$DIQ175A=="Don't know"] <- NA
+table(dat2$diabetes.family.history, useNA = "always")
+```
+
+### Smoking
+
+```{r, cache=TRUE}
+dat2$smoking <- dat2$SMQ020
+dat2$smoking <- car::recode(dat2$smoking, " 'Yes' = 'Current smoker'; 'No' = 'Never smoker'; else=NA  ")
+dat2$smoking <- factor(dat2$smoking, levels = c("Never smoker", "Previous smoker", "Current smoker"))
+dat2$smoking[dat2$SMQ040 == "Not at all"] <- "Previous smoker"
+table(dat2$smoking, useNA = "always")
+```
+
+### Diet
+
+#### How healthy is the diet
+
+```{r, cache=TRUE}
+dat2$diet.healthy <- dat2$DBQ700
+dat2$diet.healthy <- car::recode(dat2$diet.healthy, recodes = " c('Excellent', 'Very good')=
+                    'Very good or excellent'; 'Good'='Good'; c('Fair', 'Poor')=
+                    'Poor or fair'; else = NA ")
+dat2$diet.healthy <- factor(dat2$diet.healthy, levels = c("Poor or fair", "Good", 
+                                                          "Very good or excellent"))
+table(dat2$diet.healthy, useNA = "always")
+```
+
+### Vigorous physical activity
+
+```{r, cache=TRUE}
+dat2$physical.activity <- dat2$PAQ605
+dat2$physical.activity <- car::recode(dat2$physical.activity, recodes = " 'No' = 'No'; 
+                                      'Yes' = 'Yes'; else=NA")
+dat2$physical.activity <- factor(dat2$physical.activity, levels = c("No", "Yes"))
+table(dat2$physical.activity, useNA = "always")
+```
+
+### Access to medical services
+
+```{r, cache=TRUE}
+dat2$medical.access <- dat2$HUQ030
+dat2$medical.access <- car::recode(dat2$medical.access, recodes = " c('Yes',
+                              'There is more than one place')='Yes'; 'There is no place'=
+                              'No'; else=NA")
+table(dat2$medical.access, useNA = "always")
+```
+
+### Hypertension/high blood pressure
+
+#### Systolic BP
+
+```{r, cache=TRUE}
+dat2$systolic1 <- dat2$BPXSY1
+dat2$systolic2 <- dat2$BPXSY2
+dat2$systolic3 <- dat2$BPXSY3
+dat2$systolic4 <- dat2$BPXSY4
+
+dat2 <- dat2 %>% 
+  mutate(systolicBP = rowMeans(dat2[, c("systolic1", "systolic2", 
+                                        "systolic3", "systolic4")], 
+                             na.rm = TRUE))
+summary(dat2$systolicBP)
+```
+
+#### Diastolic BP
+
+```{r, cache=TRUE}
+dat2$diastolic1 <- dat2$BPXDI1
+dat2$diastolic2 <- dat2$BPXDI2
+dat2$diastolic3 <- dat2$BPXDI3
+dat2$diastolic4 <- dat2$BPXDI4
+datX <- dat2[, c("diastolic1", "diastolic2", 
+                 "diastolic3", "diastolic4")]
+datX[datX ==0] <- NA
+dat2$diastolicBP <- rowMeans(datX[, c("diastolic1", "diastolic2", 
+                                      "diastolic3", "diastolic4")], 
+                             na.rm = TRUE)
+summary(dat2$diastolicBP)
+```
+
+### Sleep (daily in hours)
+
+```{r, cache=TRUE}
+dat2$sleep <- dat2$SLD010H
+dat2$sleep[dat2$sleep == 99] <- NA
+summary(dat2$sleep)
+```
+
+### Laboratory data
+
+#### Uric acid (mg/dL)
+
+```{r, cache=TRUE}
+dat2$uric.acid <- dat2$LBXSUA
+summary(dat2$uric.acid)
+```
+
+#### Total protein (g/dL)
+
+```{r, cache=TRUE}
+dat2$protein.total <- dat2$LBXSTP
+summary(dat2$protein.total)
+```
+
+#### Total bilirubin (mg/dL)
+
+```{r, cache=TRUE}
+dat2$bilirubin.total <- dat2$LBXSTB
+summary(dat2$bilirubin.total)
+```
+
+#### Phosphorus (mg/dL)
+
+```{r, cache=TRUE}
+dat2$phosphorus <- dat2$LBXSPH
+summary(dat2$phosphorus)
+```
+
+#### Sodium (mmol/L)
+
+```{r, cache=TRUE}
+dat2$sodium <- dat2$LBXSNASI
+summary(dat2$sodium)
+```
+
+#### Potassium (mmol/L)
+
+```{r, cache=TRUE}
+dat2$potassium <- dat2$LBXSKSI
+summary(dat2$potassium)
+```
+
+#### Globulin (g/dL)
+
+```{r, cache=TRUE}
+dat2$globulin <- dat2$LBXSGB
+summary(dat2$globulin)
+```
+
+#### Total calcium (mg/dL)
+
+```{r, cache=TRUE}
+dat2$calcium.total <- dat2$LBXSCA
+summary(dat2$calcium.total)
+```
+
+#### High cholesterol
+
+```{r, cache=TRUE}
+dat2$high.cholesterol <- dat2$BPQ080
+dat2$high.cholesterol <- car::recode(dat2$high.cholesterol, recodes = " 'Yes'='Yes';
+                                     'No'='No'; else = NA")
+table(dat2$high.cholesterol, useNA = "always")
+```
+
+### Survey features
+
+#### Weight
+
+```{r, cache=TRUE}
+dat2$survey.weight <- dat2$WTINT2YR
+summary(dat2$survey.weight)
+dat2$survey.weight.mec <- dat2$WTMEC2YR
+summary(dat2$survey.weight.mec)
+```
+
+#### PSU
+
+```{r, cache=TRUE}
+dat2$psu <- as.factor(dat2$SDMVPSU)
+table(dat2$psu)
+```
+
+#### Strata
+
+```{r, cache=TRUE}
+dat2$strata <- as.factor(dat2$SDMVSTRA)
+table(dat2$strata)
+```
+
+### Survey year
+
+```{r, cache=TRUE}
+dat2$year <- dat2$SDDSRVYR
+table(dat2$year, useNA = "always") 
+```
+
+### ICD-10-CM codes
+
+```{r, cache=TRUE}
+colnames(rxq12) <- c("id", "icd10")
+colnames(rxq22) <- c("id", "icd10")
+colnames(rxq32) <- c("id", "icd10")
+
+rx2013 <- rbind(rxq12, rxq22, rxq32)
+rx2013 <- rx2013[order(rx2013$id),]
+
+rx2013$icd10[rx2013$icd10 == "Unknown"] <- NA
+rx2013$icd10[rx2013$icd10 == "Refused"] <- NA
+rx2013$icd10[rx2013$icd10 == "Don't know"] <- NA
+rx2013$icd10[rx2013$icd10 == ""] <- NA
+rx2013$icd10.new <- substr(rx2013$icd10, start = 1, stop = 3)
+
+rx2013 <- na.omit(rx2013)
+```
+
+## Analytic data
+
+### Full dataset
+
+```{r, cache=TRUE}
+nhanes13r <- dat2
+```
+
+### Analytic datset - adults 20 years of more
+
+```{r, cache=TRUE}
+vars <- c(
+  # ID
+  "id",
+  
+  # Demographic
+  "age", "age.cat", "sex", "education", "race", 
+  "marital", "income", "born", "pregnancy",
+  
+  # obesity
+  "obese", 
+  
+  # Diabetes
+  "diabetes", "diabetes.family.history",
+  
+  # Smoking
+  "smoking", 
+  
+  # Diet
+  "diet.healthy", 
+
+  # Physical activity
+  "physical.activity", 
+  
+  # Access to routine healthcare
+  "medical.access",
+  
+  # Blood pressure and Hypertension
+  "systolicBP", "diastolicBP", 
+  
+  # Sleep 
+  "sleep",
+
+  # Laboratory 
+  "uric.acid", "protein.total", "bilirubin.total", "phosphorus",
+  "sodium", "potassium", "globulin", "calcium.total", 
+  "high.cholesterol",
+  
+  # Survey features
+  "survey.weight", "survey.weight.mec", "psu", "strata", 
+  
+  # Survey year
+  "year"
+)
+
+nhanes13r.sel <- nhanes13r[, vars]
+```
+
+```{r, cache=TRUE}
+# Adults 20 years of more and not pregnant
+dim(nhanes13r.sel)
+analytic13 <- subset(nhanes13r.sel, age >= 20 & 
+                       pregnancy != 'yes')
+dim(analytic13)
+```
+
+### Save dataset for later use
+
+```{r, cache=TRUE}
+dim(analytic13)
+dim(rx2013)
+save(analytic13, rx2013, file = "data/analytic13recoded.RData")
+```

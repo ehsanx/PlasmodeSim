@@ -1,0 +1,123 @@
+# Preparing data with modified Lab variables
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car)
+#library(dplyr)
+library(readr)
+library(DataExplorer)
+library(tableone)
+library(Publish)
+library(jtools)
+require(mice)
+require(autoCovariateSelection)
+require(data.table)
+# BiocManager::install("GenomicRanges")
+require(GenomicRanges)
+```
+
+
+# Load data
+
+```{r, cache=TRUE}
+load(file = "data/fullcovproxy.RData")
+ls()
+```
+
+# List variables
+
+```{r, cache=TRUE}
+demovars <- c("age.cat",  # Age
+  "sex",  # Sex
+  "education",  # Education
+  "race", # Race/ethnicity 
+  "marital",  # Marital status
+  "income",  # Family yearly income
+  "born",  # Where born / citizenship 
+  "diabetes.family.history",    # Family history of diabetes
+  "high.cholesterol",  # High cholesterol
+  "smoking",    # Smoking status
+  "diet.healthy",  # How healthy is the diet 
+  "physical.activity",  # Vigorous physical activity 
+  "medical.access",    # Access to routine healthcare
+  "sleep") # sleep
+# demographic variables in a formula
+demoform <- paste0(demovars, collapse = "+")
+demoform
+```
+
+# Modifications
+
+```{r, cache=TRUE}
+# exposure
+fullcovproxy.data$exposure <- relevel(as.factor(fullcovproxy.data$obese), ref = "No")
+fullcovproxy.data$exposure <- ifelse(fullcovproxy.data$exposure == "No", 0 ,1)
+# outcome
+fullcovproxy.data$outcome <- relevel(as.factor(fullcovproxy.data$diabetes), ref = "No")
+fullcovproxy.data$outcome <- ifelse(fullcovproxy.data$outcome == "No", 0 ,1)
+# original lab variables
+labvars.original <- c("uric.acid", 
+                      "protein.total", 
+                      "bilirubin.total", 
+                      "phosphorus",
+                      "sodium", 
+                      "potassium", 
+                      "globulin", 
+                      "calcium.total", 
+                      #"high.cholesterol",
+                      "systolicBP", 
+                      "diastolicBP")
+labvars.original
+labvars.originalform <- paste0(labvars.original, collapse = "+")
+# modified lab variables
+fullcovproxy.data$l1 <- with(fullcovproxy.data, (log(globulin)))
+fullcovproxy.data$l2 <- with(fullcovproxy.data, (protein.total*calcium.total))
+fullcovproxy.data$l3 <- with(fullcovproxy.data, (diastolicBP/systolicBP)^2)
+fullcovproxy.data$l4 <- with(fullcovproxy.data, sqrt(uric.acid+bilirubin.total)/2)
+fullcovproxy.data$l5 <- with(fullcovproxy.data, (phosphorus^1.75/(sodium*potassium)))
+fullcovproxy.data$l6 <- with(fullcovproxy.data, log(systolicBP+10))
+# Summarize modified lab variables
+summary(fullcovproxy.data$l1)
+summary(fullcovproxy.data$l2)
+summary(fullcovproxy.data$l3)
+summary(fullcovproxy.data$l4)
+summary(fullcovproxy.data$l5)
+summary(fullcovproxy.data$l6)
+# modified lab variables in a formula
+labvars <- paste0("l",1:6)
+labform <- paste0(labvars, collapse = "+")
+labform
+```
+
+
+```{r, cache=TRUE}
+# select empirical covariates that have RR of < 0.8 
+# or > 1.2 compared with the outcome
+y <- as.logical(as.vector(fullcovproxy.data$outcome))
+df.emp <- fullcovproxy.data[c("id", proxy.list)]
+rcd <- get_relative_risk(df = df.emp, outcomeVec = y)
+var.list.emp <- data.frame(var = proxy.list, rr = rcd)
+dim(var.list.emp)
+var.list.emp2 <- var.list.emp[order(abs(var.list.emp$rr), decreasing = TRUE), ]
+var.list.emp3 <- subset(var.list.emp2, rr < 0.8 | rr > 1.2)
+dim(var.list.emp3)
+sel.proxy <- var.list.emp3$var
+sel.proxy.form <- paste0(sel.proxy, collapse = "+")
+length(sel.proxy)
+length(proxy.list[proxy.list %in% sel.proxy])
+length(sel.proxy[sel.proxy %in% proxy.list])
+sel.proxy.form
+```
+
+
+# Save
+
+```{r save, eval=TRUE, cache=TRUE}
+full.data <- fullcovproxy.data
+save(demovars, demoform, labvars, labform, 
+     labvars.original, labvars.originalform,
+     sel.proxy, sel.proxy.form, 
+     full.data, fullcovproxy.data, proxy.list,
+     file = "data/MasterPlasmodeData.RData") 
+```

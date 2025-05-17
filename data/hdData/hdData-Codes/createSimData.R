@@ -1,4 +1,6 @@
-setwd("E:/GitHub/PlasmodeSim/data/hdData/")
+# setwd("E:/GitHub/PlasmodeSim/data/hdData/")
+setwd("C:\\Users\\Ehsan\\Documents\\GitHub\\PlasmodeSim\\data\\hdData\\")
+
 require(Plasmode)
 require(dplyr)
 library(parallel)

@@ -1,0 +1,95 @@
+# Merge three cycles
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car)
+#library(dplyr)
+library(readr)
+library(DataExplorer)
+library(tableone)
+library(Publish)
+library(jtools)
+require(mice)
+```
+
+## Analytic dataset
+
+### Load 2013-18 datasets
+
+```{r, cache=TRUE}
+load("data/analytic13recoded.RData")
+load("data/analytic15recoded.RData")
+load("data/analytic17recoded.RData")
+```
+
+### Merge 2013-18 datasets
+
+```{r, cache=TRUE}
+# adults aged 20 years or more
+data.merged0 <- rbind(analytic13, analytic15, analytic17)
+dim(data.merged0)
+data.merged <- droplevels(data.merged0)
+```
+
+### Check missingness
+
+```{r, cache=TRUE}
+plot_missing(data.merged)
+# profile_missing(data.merged)
+dim(data.merged)
+```
+
+::: column-margin
+The data contants variables with some missing information.
+:::
+
+```{r, cache=TRUE}
+data.complete <- na.omit(data.merged)
+dim(data.complete)
+```
+
+::: column-margin
+-   Only complete cases retained, and survey features/weights were ignored for simplicity.
+-   In a realistic analysis, we would consider the missingness pattern before deleting or imputing such information.
+:::
+
+## Summary statistics
+
+```{r, cache=TRUE, echo=FALSE}
+tab1 <- table1::table1(x = ~ age.cat + sex + education + race + 
+                         marital + income + born + year + 
+                         diabetes.family.history + smoking + diet.healthy + 
+                         physical.activity + medical.access + sleep + 
+                         systolicBP + diastolicBP + uric.acid + 
+                         protein.total + bilirubin.total + phosphorus + 
+                         sodium + potassium + globulin + calcium.total + 
+                         high.cholesterol| obese, data = data.complete)
+tab1
+```
+
+::: column-margin
+-   Investigator specified covariates stratified by the exposure (obesity)
+-   This Table includes information about participants with and without ICD-10-CM proxy information. Therefore, the sample is is larger than the original analysis.
+:::
+
+## Proxy data from ICD10 codes
+
+```{r, cache=TRUE}
+dat.proxy.long <- rbind(rx2013, rx2015, rx2017) 
+dat.proxy.long$icd10 <- NULL
+# Rename 3 digits ICD-10 codes as icd10
+colnames(dat.proxy.long)[names(dat.proxy.long)=="icd10.new"] <- "icd10"
+```
+
+::: column-margin
+We combine all of the ICD-10-CM information form all 3 cycles.
+:::
+
+## Save dataset for later use
+
+```{r, cache=TRUE}
+save(data.merged, 
+     data.complete, 
+     dat.proxy.long, 
+     file = "data/analytic3cycles.RData")
+```

@@ -1,0 +1,11 @@
+magrittr
+kableExtra
+dplyr
+autoCovariateSelection
+knitr
+tidyr
+cobalt
+ggplot2
+WeightIt
+zoo
+lmtest

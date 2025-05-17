@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>a-labmodified</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="5a-labModified_files/libs/clipboard/clipboard.min.js"></script>
+<script src="5a-labModified_files/libs/quarto-html/quarto.js"></script>
+<script src="5a-labModified_files/libs/quarto-html/popper.min.js"></script>
+<script src="5a-labModified_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="5a-labModified_files/libs/quarto-html/anchor.min.js"></script>
+<link href="5a-labModified_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="5a-labModified_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="5a-labModified_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="5a-labModified_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="5a-labModified_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="preparing-data-with-modified-lab-variables" class="level1">
+<h1>Preparing data with modified Lab variables</h1>
+</section>
+<section id="load-data" class="level1">
+<h1>Load data</h1>
+<div class="cell" data-hash="5a-labModified_cache/html/unnamed-chunk-1_c87ee07f82493275ba2b00f69d723482">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"data/fullcovproxy.RData"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "basetable"                         "covform"                          
+ [3] "df"                                "df2"                              
+ [5] "dfx"                               "exposure"                         
+ [7] "fit.summary_with_ci"               "fullcovproxy.data"                
+ [9] "investigator.specified.covariates" "out1"                             
+[11] "out2"                              "out3"                             
+[13] "outcome"                           "patientIds"                       
+[15] "proxy.list"                        "proxy.list.sel"                   
+[17] "proxyform"                         "step1"                            
+[19] "step2"                             "W.out"                            </code></pre>
+</div>
+</div>
+</section>
+<section id="list-variables" class="level1">
+<h1>List variables</h1>
+<div class="cell" data-hash="5a-labModified_cache/html/unnamed-chunk-2_59eb7accc008bfa5231af6aef92646b9">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>demovars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"age.cat"</span>,  <span class="co"># Age</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sex"</span>,  <span class="co"># Sex</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"education"</span>,  <span class="co"># Education</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"race"</span>, <span class="co"># Race/ethnicity </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"marital"</span>,  <span class="co"># Marital status</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"income"</span>,  <span class="co"># Family yearly income</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"born"</span>,  <span class="co"># Where born / citizenship </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"diabetes.family.history"</span>,    <span class="co"># Family history of diabetes</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"high.cholesterol"</span>,  <span class="co"># High cholesterol</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"smoking"</span>,    <span class="co"># Smoking status</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"diet.healthy"</span>,  <span class="co"># How healthy is the diet </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"physical.activity"</span>,  <span class="co"># Vigorous physical activity </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"medical.access"</span>,    <span class="co"># Access to routine healthcare</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sleep"</span>) <span class="co"># sleep</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># demographic variables in a formula</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>demoform <span class="ot">&lt;-</span> <span class="fu">paste0</span>(demovars, <span class="at">collapse =</span> <span class="st">"+"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>demoform</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "age.cat+sex+education+race+marital+income+born+diabetes.family.history+high.cholesterol+smoking+diet.healthy+physical.activity+medical.access+sleep"</code></pre>
+</div>
+</div>
+</section>
+<section id="modifications" class="level1">
+<h1>Modifications</h1>
+<div class="cell" data-hash="5a-labModified_cache/html/unnamed-chunk-3_0867f107d9eadbaf0e988356dd8ff46e">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># exposure</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>exposure <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">as.factor</span>(fullcovproxy.data<span class="sc">$</span>obese), <span class="at">ref =</span> <span class="st">"No"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>exposure <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(fullcovproxy.data<span class="sc">$</span>exposure <span class="sc">==</span> <span class="st">"No"</span>, <span class="dv">0</span> ,<span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># outcome</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>outcome <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">as.factor</span>(fullcovproxy.data<span class="sc">$</span>diabetes), <span class="at">ref =</span> <span class="st">"No"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>outcome <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(fullcovproxy.data<span class="sc">$</span>outcome <span class="sc">==</span> <span class="st">"No"</span>, <span class="dv">0</span> ,<span class="dv">1</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># original lab variables</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>labvars.original <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"uric.acid"</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"protein.total"</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"bilirubin.total"</span>, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"phosphorus"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"sodium"</span>, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"potassium"</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"globulin"</span>, </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"calcium.total"</span>, </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#"high.cholesterol",</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"systolicBP"</span>, </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"diastolicBP"</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>labvars.original</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "uric.acid"       "protein.total"   "bilirubin.total" "phosphorus"     
+ [5] "sodium"          "potassium"       "globulin"        "calcium.total"  
+ [9] "systolicBP"      "diastolicBP"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>labvars.originalform <span class="ot">&lt;-</span> <span class="fu">paste0</span>(labvars.original, <span class="at">collapse =</span> <span class="st">"+"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># modified lab variables</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l1 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, (<span class="fu">log</span>(globulin)))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l2 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, (protein.total<span class="sc">*</span>calcium.total))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l3 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, (diastolicBP<span class="sc">/</span>systolicBP)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l4 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, <span class="fu">sqrt</span>(uric.acid<span class="sc">+</span>bilirubin.total)<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l5 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, (phosphorus<span class="sc">^</span><span class="fl">1.75</span><span class="sc">/</span>(sodium<span class="sc">*</span>potassium)))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>fullcovproxy.data<span class="sc">$</span>l6 <span class="ot">&lt;-</span> <span class="fu">with</span>(fullcovproxy.data, <span class="fu">log</span>(systolicBP<span class="sc">+</span><span class="dv">10</span>))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize modified lab variables</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.3365  0.9555  1.0647  1.0583  1.1632  1.8718 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  42.78   62.48   66.24   66.45   70.30  108.04 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0036  0.2474  0.3237  0.3213  0.3978  0.6433 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4743  1.1068  1.2145  1.2202  1.3229  2.1737 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+0.005244 0.014391 0.017446 0.017894 0.020783 0.079499 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullcovproxy.data<span class="sc">$</span>l6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  4.313   4.826   4.908   4.919   5.002   5.497 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modified lab variables in a formula</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>labvars <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"l"</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>labform <span class="ot">&lt;-</span> <span class="fu">paste0</span>(labvars, <span class="at">collapse =</span> <span class="st">"+"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>labform</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "l1+l2+l3+l4+l5+l6"</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="5a-labModified_cache/html/unnamed-chunk-4_443dc8d3b27996007156bea1f1990ceb">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select empirical covariates that have RR of &lt; 0.8 </span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># or &gt; 1.2 compared with the outcome</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(<span class="fu">as.vector</span>(fullcovproxy.data<span class="sc">$</span>outcome))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>df.emp <span class="ot">&lt;-</span> fullcovproxy.data[<span class="fu">c</span>(<span class="st">"id"</span>, proxy.list)]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>rcd <span class="ot">&lt;-</span> <span class="fu">get_relative_risk</span>(<span class="at">df =</span> df.emp, <span class="at">outcomeVec =</span> y)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>var.list.emp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">var =</span> proxy.list, <span class="at">rr =</span> rcd)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(var.list.emp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 142   2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>var.list.emp2 <span class="ot">&lt;-</span> var.list.emp[<span class="fu">order</span>(<span class="fu">abs</span>(var.list.emp<span class="sc">$</span>rr), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>var.list.emp3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(var.list.emp2, rr <span class="sc">&lt;</span> <span class="fl">0.8</span> <span class="sc">|</span> rr <span class="sc">&gt;</span> <span class="fl">1.2</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(var.list.emp3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 94  2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sel.proxy <span class="ot">&lt;-</span> var.list.emp3<span class="sc">$</span>var</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sel.proxy.form <span class="ot">&lt;-</span> <span class="fu">paste0</span>(sel.proxy, <span class="at">collapse =</span> <span class="st">"+"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(sel.proxy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 94</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(proxy.list[proxy.list <span class="sc">%in%</span> sel.proxy])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 94</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(sel.proxy[sel.proxy <span class="sc">%in%</span> proxy.list])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 94</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sel.proxy.form</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "rec_dx_R73_once+rec_dx_E78_once+rec_dx_N28_once+rec_dx_N19_once+rec_dx_I10_once+rec_dx_E28_frequent+rec_dx_I63_once+rec_dx_I80_once+rec_dx_E79_once+rec_dx_I50_once+rec_dx_K76_once+rec_dx_R60_once+rec_dx_I21_once+rec_dx_I10_frequent+rec_dx_R19_once+rec_dx_D75_once+rec_dx_I50_frequent+rec_dx_M1A_once+rec_dx_I70_once+rec_dx_I20_once+rec_dx_B96_once+rec_dx_I51_once+rec_dx_N52_once+rec_dx_E87_once+rec_dx_K59_once+rec_dx_K31_once+rec_dx_R07_once+rec_dx_I99_once+rec_dx_M10_once+rec_dx_R12_once+rec_dx_R21_once+rec_dx_R35_once+rec_dx_J98_once+rec_dx_Z95_once+rec_dx_M79_once+rec_dx_N40_once+rec_dx_R39_once+rec_dx_J43_once+rec_dx_K92_once+rec_dx_K25_once+rec_dx_L08_once+rec_dx_I49_once+rec_dx_J20_once+rec_dx_L20_once+rec_dx_T88_once+rec_dx_B35_once+rec_dx_I48_once+rec_dx_H57_frequent+rec_dx_G20_once+rec_dx_H40_once+rec_dx_K21_once+rec_dx_E07_once+rec_dx_K27_once+rec_dx_L23_once+rec_dx_G31_once+rec_dx_G25_once+rec_dx_N42_once+rec_dx_R52_once+rec_dx_R32_once+rec_dx_E28_once+rec_dx_I48_frequent+rec_dx_R25_once+rec_dx_M06_once+rec_dx_H57_once+rec_dx_J42_once+rec_dx_B20_frequent+rec_dx_R05_once+rec_dx_K58_once+rec_dx_F41_once+rec_dx_R45_once+rec_dx_H10_once+rec_dx_F29_once+rec_dx_M06_frequent+rec_dx_G30_once+rec_dx_Z79_once+rec_dx_R51_once+rec_dx_L93_once+rec_dx_N30_once+rec_dx_N95_once+rec_dx_B20_once+rec_dx_G30_frequent+rec_dx_F17_once+rec_dx_J40_once+rec_dx_J02_once+rec_dx_F43_once+rec_dx_G43_once+rec_dx_N94_once+rec_dx_L70_once+rec_dx_B00_once+rec_dx_F90_once+rec_dx_N92_once+rec_dx_K08_once+rec_dx_J01_once+rec_dx_G89_once"</code></pre>
+</div>
+</div>
+</section>
+<section id="save" class="level1">
+<h1>Save</h1>
+<div class="cell" data-hash="5a-labModified_cache/html/save_2cce3bde4276950553fcb62ea38c8306">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>full.data <span class="ot">&lt;-</span> fullcovproxy.data</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(demovars, demoform, labvars, labform, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>     labvars.original, labvars.originalform,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>     sel.proxy, sel.proxy.form, </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>     full.data, fullcovproxy.data, proxy.list,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"data/MasterPlasmodeData.RData"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>merge13to17</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="3-merge13to17_files/libs/clipboard/clipboard.min.js"></script>
+<script src="3-merge13to17_files/libs/quarto-html/quarto.js"></script>
+<script src="3-merge13to17_files/libs/quarto-html/popper.min.js"></script>
+<script src="3-merge13to17_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="3-merge13to17_files/libs/quarto-html/anchor.min.js"></script>
+<link href="3-merge13to17_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="3-merge13to17_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="3-merge13to17_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="3-merge13to17_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="3-merge13to17_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<link href="3-merge13to17_files/libs/table1-1.0/table1_defaults.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+
+<section id="merge-three-cycles" class="level1 page-columns page-full">
+<h1>Merge three cycles</h1>
+<section id="analytic-dataset" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="analytic-dataset">Analytic dataset</h2>
+<section id="load-2013-18-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="load-2013-18-datasets">Load 2013-18 datasets</h3>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-1_9a4573f0591c70791dff97237d8790ab">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/analytic13recoded.RData"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/analytic15recoded.RData"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/analytic17recoded.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="merge-2013-18-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="merge-2013-18-datasets">Merge 2013-18 datasets</h3>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-2_b0193a9a42bb7cd31553040383f1b9fc">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># adults aged 20 years or more</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data.merged0 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(analytic13, analytic15, analytic17)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data.merged0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17057    34</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data.merged <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(data.merged0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="check-missingness" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="check-missingness">Check missingness</h3>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-3_5507941af168aebe40b3778b88484f21">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(data.merged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3-merge13to17_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># profile_missing(data.merged)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data.merged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17057    34</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The data contants variables with some missing information.</p>
+</div></div><div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-4_6a1eafd44111b28dd6c77bb258f1e543">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data.complete <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data.merged)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data.complete)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13505    34</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<ul>
+<li>Only complete cases retained, and survey features/weights were ignored for simplicity.</li>
+<li>In a realistic analysis, we would consider the missingness pattern before deleting or imputing such information.</li>
+</ul>
+</div></div></section>
+</section>
+<section id="summary-statistics" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h2>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-5_7c9ecf860e955bef721b5effbfa23425">
+<div class="cell-output-display">
+
+<div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class="rowlabel firstrow lastrow"></th>
+<th class="firstrow lastrow"><span class="stratlabel">No<br><span class="stratn">(N=8087)</span></span></th>
+<th class="firstrow lastrow"><span class="stratlabel">Yes<br><span class="stratn">(N=5418)</span></span></th>
+<th class="firstrow lastrow"><span class="stratlabel">Overall<br><span class="stratn">(N=13505)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="rowlabel firstrow">age.cat</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">20-49</td>
+<td>4076 (50.4%)</td>
+<td>2649 (48.9%)</td>
+<td>6725 (49.8%)</td>
+</tr>
+<tr>
+<td class="rowlabel">50-64</td>
+<td>2048 (25.3%)</td>
+<td>1558 (28.8%)</td>
+<td>3606 (26.7%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">65+</td>
+<td class="lastrow">1963 (24.3%)</td>
+<td class="lastrow">1211 (22.4%)</td>
+<td class="lastrow">3174 (23.5%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">sex</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Male</td>
+<td>4125 (51.0%)</td>
+<td>2352 (43.4%)</td>
+<td>6477 (48.0%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Female</td>
+<td class="lastrow">3962 (49.0%)</td>
+<td class="lastrow">3066 (56.6%)</td>
+<td class="lastrow">7028 (52.0%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">education</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Less than high school</td>
+<td>1609 (19.9%)</td>
+<td>1132 (20.9%)</td>
+<td>2741 (20.3%)</td>
+</tr>
+<tr>
+<td class="rowlabel">High school</td>
+<td>4111 (50.8%)</td>
+<td>3237 (59.7%)</td>
+<td>7348 (54.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">College graduate or above</td>
+<td class="lastrow">2367 (29.3%)</td>
+<td class="lastrow">1049 (19.4%)</td>
+<td class="lastrow">3416 (25.3%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">race</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">White</td>
+<td>3159 (39.1%)</td>
+<td>2086 (38.5%)</td>
+<td>5245 (38.8%)</td>
+</tr>
+<tr>
+<td class="rowlabel">Black</td>
+<td>1420 (17.6%)</td>
+<td>1338 (24.7%)</td>
+<td>2758 (20.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel">Hispanic</td>
+<td>1780 (22.0%)</td>
+<td>1540 (28.4%)</td>
+<td>3320 (24.6%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Others</td>
+<td class="lastrow">1728 (21.4%)</td>
+<td class="lastrow">454 (8.4%)</td>
+<td class="lastrow">2182 (16.2%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">marital</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Never married</td>
+<td>1519 (18.8%)</td>
+<td>916 (16.9%)</td>
+<td>2435 (18.0%)</td>
+</tr>
+<tr>
+<td class="rowlabel">Married/with partner</td>
+<td>4924 (60.9%)</td>
+<td>3227 (59.6%)</td>
+<td>8151 (60.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Other</td>
+<td class="lastrow">1644 (20.3%)</td>
+<td class="lastrow">1275 (23.5%)</td>
+<td class="lastrow">2919 (21.6%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">income</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">less than $20,000</td>
+<td>1524 (18.8%)</td>
+<td>1091 (20.1%)</td>
+<td>2615 (19.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel">$20,000 to $74,999</td>
+<td>4058 (50.2%)</td>
+<td>2966 (54.7%)</td>
+<td>7024 (52.0%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">$75,000 and Over</td>
+<td class="lastrow">2505 (31.0%)</td>
+<td class="lastrow">1361 (25.1%)</td>
+<td class="lastrow">3866 (28.6%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">born</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Born in US</td>
+<td>5247 (64.9%)</td>
+<td>4193 (77.4%)</td>
+<td>9440 (69.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Other place</td>
+<td class="lastrow">2840 (35.1%)</td>
+<td class="lastrow">1225 (22.6%)</td>
+<td class="lastrow">4065 (30.1%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">year</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">NHANES 2013-2014 public release</td>
+<td>2982 (36.9%)</td>
+<td>1790 (33.0%)</td>
+<td>4772 (35.3%)</td>
+</tr>
+<tr>
+<td class="rowlabel">NHANES 2015-2016 public release</td>
+<td>2712 (33.5%)</td>
+<td>1870 (34.5%)</td>
+<td>4582 (33.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">NHANES 2017-2018 public release</td>
+<td class="lastrow">2393 (29.6%)</td>
+<td class="lastrow">1758 (32.4%)</td>
+<td class="lastrow">4151 (30.7%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">diabetes.family.history</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">No</td>
+<td>7165 (88.6%)</td>
+<td>4546 (83.9%)</td>
+<td>11711 (86.7%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Yes</td>
+<td class="lastrow">922 (11.4%)</td>
+<td class="lastrow">872 (16.1%)</td>
+<td class="lastrow">1794 (13.3%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">smoking</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Never smoker</td>
+<td>4654 (57.5%)</td>
+<td>3074 (56.7%)</td>
+<td>7728 (57.2%)</td>
+</tr>
+<tr>
+<td class="rowlabel">Previous smoker</td>
+<td>1795 (22.2%)</td>
+<td>1435 (26.5%)</td>
+<td>3230 (23.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Current smoker</td>
+<td class="lastrow">1638 (20.3%)</td>
+<td class="lastrow">909 (16.8%)</td>
+<td class="lastrow">2547 (18.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">diet.healthy</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Poor or fair</td>
+<td>1981 (24.5%)</td>
+<td>2261 (41.7%)</td>
+<td>4242 (31.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel">Good</td>
+<td>3346 (41.4%)</td>
+<td>2153 (39.7%)</td>
+<td>5499 (40.7%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Very good or excellent</td>
+<td class="lastrow">2760 (34.1%)</td>
+<td class="lastrow">1004 (18.5%)</td>
+<td class="lastrow">3764 (27.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">physical.activity</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">No</td>
+<td>6445 (79.7%)</td>
+<td>4167 (76.9%)</td>
+<td>10612 (78.6%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Yes</td>
+<td class="lastrow">1642 (20.3%)</td>
+<td class="lastrow">1251 (23.1%)</td>
+<td class="lastrow">2893 (21.4%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">medical.access</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">No</td>
+<td>1546 (19.1%)</td>
+<td>762 (14.1%)</td>
+<td>2308 (17.1%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Yes</td>
+<td class="lastrow">6541 (80.9%)</td>
+<td class="lastrow">4656 (85.9%)</td>
+<td class="lastrow">11197 (82.9%)</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">sleep</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>7.41 (1.53)</td>
+<td>7.32 (1.61)</td>
+<td>7.37 (1.56)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">7.50 [2.00, 14.5]</td>
+<td class="lastrow">7.00 [2.00, 14.0]</td>
+<td class="lastrow">7.50 [2.00, 14.5]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">systolicBP</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>123 (18.8)</td>
+<td>127 (17.3)</td>
+<td>125 (18.4)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">119 [64.7, 229]</td>
+<td class="lastrow">125 [74.0, 234]</td>
+<td class="lastrow">122 [64.7, 234]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">diastolicBP</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>70.0 (11.3)</td>
+<td>72.2 (11.8)</td>
+<td>70.9 (11.6)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">70.0 [8.00, 123]</td>
+<td class="lastrow">72.0 [26.0, 125]</td>
+<td class="lastrow">70.7 [8.00, 125]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">uric.acid</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>5.20 (1.37)</td>
+<td>5.77 (1.49)</td>
+<td>5.43 (1.45)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">5.10 [0.700, 12.3]</td>
+<td class="lastrow">5.70 [1.60, 18.0]</td>
+<td class="lastrow">5.30 [0.700, 18.0]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">protein.total</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>7.14 (0.466)</td>
+<td>7.11 (0.449)</td>
+<td>7.13 (0.459)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">7.10 [4.70, 10.2]</td>
+<td class="lastrow">7.10 [5.20, 9.40]</td>
+<td class="lastrow">7.10 [4.70, 10.2]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">bilirubin.total</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>0.581 (0.302)</td>
+<td>0.511 (0.288)</td>
+<td>0.553 (0.298)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">0.500 [0, 3.30]</td>
+<td class="lastrow">0.500 [0, 7.10]</td>
+<td class="lastrow">0.500 [0, 7.10]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">phosphorus</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>3.72 (0.560)</td>
+<td>3.65 (0.575)</td>
+<td>3.69 (0.567)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">3.70 [1.00, 9.60]</td>
+<td class="lastrow">3.60 [1.70, 8.90]</td>
+<td class="lastrow">3.70 [1.00, 9.60]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">sodium</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>140 (2.47)</td>
+<td>139 (2.52)</td>
+<td>140 (2.49)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">140 [124, 161]</td>
+<td class="lastrow">139 [119, 154]</td>
+<td class="lastrow">140 [119, 161]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">potassium</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>4.00 (0.361)</td>
+<td>4.02 (0.356)</td>
+<td>4.01 (0.359)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">4.00 [2.63, 6.00]</td>
+<td class="lastrow">4.00 [2.60, 6.60]</td>
+<td class="lastrow">4.00 [2.60, 6.60]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">globulin</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>2.87 (0.449)</td>
+<td>3.00 (0.452)</td>
+<td>2.92 (0.455)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">2.80 [1.60, 6.50]</td>
+<td class="lastrow">3.00 [1.40, 5.70]</td>
+<td class="lastrow">2.90 [1.40, 6.50]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">calcium.total</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">Mean (SD)</td>
+<td>9.39 (0.366)</td>
+<td>9.32 (0.370)</td>
+<td>9.36 (0.369)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Median [Min, Max]</td>
+<td class="lastrow">9.40 [6.40, 14.8]</td>
+<td class="lastrow">9.30 [6.60, 12.0]</td>
+<td class="lastrow">9.40 [6.40, 14.8]</td>
+</tr>
+<tr>
+<td class="rowlabel firstrow">high.cholesterol</td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+<td class="firstrow"></td>
+</tr>
+<tr>
+<td class="rowlabel">No</td>
+<td>5436 (67.2%)</td>
+<td>3271 (60.4%)</td>
+<td>8707 (64.5%)</td>
+</tr>
+<tr>
+<td class="rowlabel lastrow">Yes</td>
+<td class="lastrow">2651 (32.8%)</td>
+<td class="lastrow">2147 (39.6%)</td>
+<td class="lastrow">4798 (35.5%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<ul>
+<li>Investigator specified covariates stratified by the exposure (obesity)</li>
+<li>This Table includes information about participants with and without ICD-10-CM proxy information. Therefore, the sample is is larger than the original analysis.</li>
+</ul>
+</div></div></section>
+<section id="proxy-data-from-icd10-codes" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="proxy-data-from-icd10-codes">Proxy data from ICD10 codes</h2>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-6_23d9895dad1b93c6c16075f860a264b0">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat.proxy.long <span class="ot">&lt;-</span> <span class="fu">rbind</span>(rx2013, rx2015, rx2017) </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dat.proxy.long<span class="sc">$</span>icd10 <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename 3 digits ICD-10 codes as icd10</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(dat.proxy.long)[<span class="fu">names</span>(dat.proxy.long)<span class="sc">==</span><span class="st">"icd10.new"</span>] <span class="ot">&lt;-</span> <span class="st">"icd10"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>We combine all of the ICD-10-CM information form all 3 cycles.</p>
+</div></div></section>
+<section id="save-dataset-for-later-use" class="level2">
+<h2 class="anchored" data-anchor-id="save-dataset-for-later-use">Save dataset for later use</h2>
+<div class="cell" data-hash="3-merge13to17_cache/html/unnamed-chunk-7_c2ac0a0c4bbcba6d5bdebe048e5cced7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(data.merged, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     data.complete, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     dat.proxy.long, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"data/analytic3cycles.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

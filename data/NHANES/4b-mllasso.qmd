@@ -1,0 +1,125 @@
+# Pure ML
+
+::: callout-tip
+We show an example using LASSO aproach
+:::
+
+# Pure ML approach (LASSO)
+
+Start with all recurrence variables 
+
+
+Say, 100 proxies (associated with outcome) were selected by LASSO approach (*ML-hdPS*)
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+require(autoCovariateSelection)
+require(dplyr)
+require(cobalt)
+library(ggplot2)
+require(WeightIt)
+library(lmtest)
+library(knitr)
+library(kableExtra)
+load(file = "data/dfx7.RData")
+```
+
+## Choose variables associated with outcome
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+proxy.dim <- out2
+dim(proxy.dim) # id + k
+head(proxy.dim)[,1:3]
+proxy.dim$id <- proxy.dim$idx
+proxy.dim$idx <- NULL
+fullcovproxy.data <- merge(data.complete[,c("id",
+                                    outcome, 
+                                    exposure, 
+                                    investigator.specified.covariates)], 
+                       proxy.dim, by = "id")
+dim(fullcovproxy.data)
+fullcovproxy.data$outcome <- as.numeric(I(fullcovproxy.data$diabetes=='Yes'))
+fullcovproxy.data$exposure <- as.numeric(I(fullcovproxy.data$obese=='Yes'))
+```
+
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE}
+proxy.list <- names(out2[-1])
+# out3$autoselected_covariate_df[,-1] for hybrid 
+# out2 is from step2$recurrence_data
+covarsTfull <- c(investigator.specified.covariates, proxy.list)
+Y.form <- as.formula(paste0(c("outcome~ exposure", 
+                              covarsTfull), collapse = "+") )
+covar.mat <- model.matrix(Y.form, data = fullcovproxy.data)[,-1]
+lasso.fit<-glmnet::cv.glmnet(y = fullcovproxy.data$outcome, 
+                             x = covar.mat, 
+                             type.measure='mse',
+                             family="binomial",
+                             alpha = 1, 
+                             nfolds = 5)
+coef.fit<-coef(lasso.fit,s='lambda.min',exact=TRUE)
+sel.variables<-row.names(coef.fit)[which(as.numeric(coef.fit)!=0)]
+proxy.list.sel.ml <- proxy.list[proxy.list %in% sel.variables]
+length(proxy.list.sel.ml)
+```
+
+::: column-margin
+-   From all proxies, we try to identify proxies that are empirically associated with the outcome based on a multivariate LASSO (outcome with all proxies in **one model**).
+-   Note that LASSO model is choosing variables based on <mark>association with the `outcome`</mark> conditional on the 'exposure\`.
+-   <mark>Variable selection</mark> is only happening for proxy variables.
+-   Investigator specified variables are not being subject to variable selection.
+:::
+
+## Build model formula based on selected variables
+
+```{r, cache=TRUE}
+covform <- paste0(investigator.specified.covariates, collapse = "+")
+proxyform <- paste0(proxy.list.sel.ml, collapse = "+")
+rhsformula <- paste0(c(covform, proxyform), collapse = "+")
+ps.formula <- as.formula(paste0("exposure", "~", rhsformula))
+```
+
+::: column-margin
+Build propensity score model based on selected variables based on LASSO.
+:::
+
+## Fit the PS model
+
+```{r, cache=TRUE}
+require(WeightIt)
+W.out <- weightit(ps.formula, 
+                    data = fullcovproxy.data, 
+                    estimand = "ATE",
+                    method = "ps")
+```
+
+::: column-margin
+Propensity score model fit to be able to calculate the inverse probability weights.
+:::
+
+## Obtain log-OR from unadjusted outcome model
+
+```{r, cache=TRUE, warning=FALSE, message=FALSE}
+out.formula <- as.formula(paste0("outcome", "~", "exposure"))
+fit <- glm(out.formula,
+            data = fullcovproxy.data,
+            weights = W.out$weights,
+            family= binomial(link = "logit"))
+fit.summary <- summary(fit)$coef["exposure",
+                                 c("Estimate", 
+                                   "Std. Error", 
+                                   "Pr(>|z|)")]
+fit.ci <- confint(fit, level = 0.95)["exposure", ]
+fit.summary_with_ci <- c(fit.summary, fit.ci)
+knitr::kable(t(round(fit.summary_with_ci,2))) 
+```
+
+::: column-margin
+Summary of results (log-OR).
+:::
+
+```{r, cache=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+save(dfx, patientIds, basetable, df, df2, step1, out1, step2, out2, out3,
+     fullcovproxy.data, exposure, outcome, investigator.specified.covariates,
+     proxyform, W.out, proxy.list, proxy.list.sel,fit.summary_with_ci,covform,
+     file = "data/fullcovproxy.RData")
+```

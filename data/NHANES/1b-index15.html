@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>b-index15</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="1b-index15_files/libs/clipboard/clipboard.min.js"></script>
+<script src="1b-index15_files/libs/quarto-html/quarto.js"></script>
+<script src="1b-index15_files/libs/quarto-html/popper.min.js"></script>
+<script src="1b-index15_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="1b-index15_files/libs/quarto-html/anchor.min.js"></script>
+<link href="1b-index15_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="1b-index15_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="1b-index15_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="1b-index15_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="1b-index15_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="download-cycle-9" class="level1">
+<h1>Download cycle 9</h1>
+<p>Downloading NHANES 2015-16 cycle components</p>
+<section id="download-and-subsetting-to-retain-only-the-useful-variables" class="level2">
+<h2 class="anchored" data-anchor-id="download-and-subsetting-to-retain-only-the-useful-variables">Download and Subsetting to retain only the useful variables</h2>
+<section id="demographic" class="level3">
+<h3 class="anchored" data-anchor-id="demographic">Demographic</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/demo_i.htm">Demographic Variables and Sample Weights (DEMO_H)</a>: The 2-year sample weights (WTINT2YR, WTMEC2YR) should be used. 15 masked variance strata and 30 masked primary sampling units (PSUs) are included in the demographics file. Each stratum has 2 PSUs.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-1_f377c4a56676acd3ba0d58b80ffdf487">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'DEMO_I'</span>)    <span class="co"># Both males and females 0 YEARS - 150 YEARS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>demo1 <span class="ot">&lt;-</span> demo[<span class="fu">c</span>(<span class="st">"SEQN"</span>,     <span class="co"># Respondent sequence number</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">"RIDAGEYR"</span>, <span class="co"># Age in years at screening</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">"RIAGENDR"</span>, <span class="co"># gender</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                <span class="st">"DMDEDUC2"</span>, <span class="co"># Education level - Adults 20+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">"RIDRETH1"</span>, <span class="co"># race/ethnicity</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">"DMDMARTL"</span>, <span class="co"># marital status    </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">"INDHHIN2"</span>, <span class="co"># Annual household income</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">"DMDBORN4"</span>, <span class="co"># where born</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">"RIDEXPRG"</span>, <span class="co"># Pregnancy status at exam (released for 20-44 yrs)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">"SDDSRVYR"</span>, <span class="co"># survey cycle</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">"WTINT2YR"</span>, <span class="co"># Full sample 2 year weights</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"WTMEC2YR"</span>, <span class="co"># Full sample 2 year MEC exam weight</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                <span class="st">"SDMVPSU"</span>,  <span class="co"># Masked variance pseudo-PSU</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">"SDMVSTRA"</span>)]<span class="co"># Masked variance pseudo-stratum</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>demo_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(demo1) </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>demo2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'DEMO_I'</span>, demo_vars, <span class="at">data =</span> demo1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: RIAGENDR DMDEDUC2 RIDRETH1 DMDMARTL INDHHIN2 DMDBORN4 RIDEXPRG SDDSRVYR</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(demo2, <span class="at">file =</span> <span class="st">"data/components/demo15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bmi" class="level3">
+<h3 class="anchored" data-anchor-id="bmi">BMI</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/bmx_i.htm">Body Measures (BMX_H)</a>: The NHANES examination sample weights should be used to analyze the body measurement data. However, if the data is joined with data from the MEC, the MEC sample weights should be used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-2_f80cb30ac4426dfdc27529ebc7a212fd">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bmx <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'BMX_I'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bmx1 <span class="ot">&lt;-</span> bmx[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BMXBMI"</span>)] <span class="co"># Body Mass Index (kg/m**2): 2 YEARS - 150 YEARS</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>bmx_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(bmx1)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>bmx2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'BMX_I'</span>, bmx_vars, <span class="at">data =</span> bmx1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nhanesTranslate("BMX_I", bmx_vars, data = bmx1): No columns were
+translated</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(bmx2, <span class="at">file =</span> <span class="st">"data/components/bmx15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="diabetes" class="level3">
+<h3 class="anchored" data-anchor-id="diabetes">Diabetes</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/diq_i.htm">Diabetes (DIQ_H)</a>: diabetes questionnaire data must be conducted using the appropriate survey design variables, sample weights, and the basic demographic variables. Interview weights should only be used if questionnaire data are analyzed by themselves. However, if the data is joined with data from the MEC, the MEC sample weights should be used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-3_5c173b4a833154390d71d6697037743e">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>diq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'DIQ_I'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>diq1 <span class="ot">&lt;-</span> diq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DIQ010"</span>, <span class="co"># Doctor told you have diabetes </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DIQ050"</span>, <span class="co"># Taking insulin now</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DIQ070"</span>, <span class="co"># Take diabetic pills to lower blood sugar</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DIQ175A"</span>)] <span class="co"># Family history</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>diq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(diq1)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>diq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'DIQ_I'</span>, diq_vars, <span class="at">data =</span> diq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: DIQ010 DIQ050 DIQ070 DIQ175A</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(diq2, <span class="at">file =</span> <span class="st">"data/components/diq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="smoking" class="level3">
+<h3 class="anchored" data-anchor-id="smoking">Smoking</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/smq_i.htm">Smoking - Cigarette Use (SMQ_H)</a>: Interview weights should only be used if questionnaire data are analyzed by themselves. However, if the data is joined with data from the MEC, the MEC sample weights should be used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-4_2fd75f816bd87ce4f4d8f3e502fea316">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>smq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'SMQ_I'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>smq1 <span class="ot">&lt;-</span> smq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"SMQ020"</span>, <span class="co"># Smoked at least 100 cigarettes in life</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"SMQ040"</span>)] <span class="co"># Do you now smoke cigarettes?: 18 YEARS - 150 YEARS</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>smq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(smq1)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>smq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'SMQ_I'</span>, smq_vars, <span class="at">data =</span> smq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: SMQ020 SMQ040</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(smq2, <span class="at">file =</span> <span class="st">"data/components/smq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="diet" class="level3">
+<h3 class="anchored" data-anchor-id="diet">Diet</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/dbq_i.htm">Diet Behavior &amp; Nutrition (DBQ_H)</a>: interview sample weights may be used in their analysis. However, if the data is joined with data from the MEC, the MEC sample weights should be used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-5_698b7f0cf5dd5f5138401f0b069ba9d7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dbq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'DBQ_I'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dbq1 <span class="ot">&lt;-</span> dbq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DBQ700"</span>)] <span class="co"># How healthy is the diet: 16 YEARS - 150 YEARS</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>dbq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(dbq1)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>dbq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'DBQ_I'</span>, dbq_vars, <span class="at">data =</span> dbq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: DBQ700</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(dbq2, <span class="at">file =</span> <span class="st">"data/components/dbq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="physical-activity" class="level3">
+<h3 class="anchored" data-anchor-id="physical-activity">Physical activity</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/PAQ_i.htm">Physical Activity (PAQ_H)</a>: the interview sample weights should be used in their analysis. However, if the data is joined with data from the MEC, the MEC sample weights should be used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-6_b854d62d5774f86900a53dddbb1f7438">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>paq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'PAQ_I'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>paq1 <span class="ot">&lt;-</span> paq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"PAQ605"</span>)] <span class="co"># Vigorous work activity: 18 YEARS150 YEARS</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>paq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(paq1)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>paq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'PAQ_I'</span>, paq_vars, <span class="at">data =</span> paq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: PAQ605</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(paq2, <span class="at">file =</span> <span class="st">"data/components/paq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="access-to-healthcare" class="level3">
+<h3 class="anchored" data-anchor-id="access-to-healthcare">Access to healthcare</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/huq_i.htm">Hospital Utilization &amp; Access to Care (HUQ_H)</a>: Although these data were collected as part of the household questionnaire, if they are merged with the MEC exam data, exam sample weights should be used for the analyses.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-7_25c6670382859d47416e33327c1374ee">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>huq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'HUQ_I'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>huq1 <span class="ot">&lt;-</span> huq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"HUQ030"</span>)] <span class="co"># Routine place to go for healthcare</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>huq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(huq1)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>huq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'HUQ_I'</span>, huq_vars, <span class="at">data =</span> huq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: HUQ030</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(huq2, <span class="at">file =</span> <span class="st">"data/components/huq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="blood-pressure" class="level3">
+<h3 class="anchored" data-anchor-id="blood-pressure">Blood pressure</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/bpx_i.htm">Blood Pressure (BPX_H)</a>: Exam sample weights should be used for analyses.</p>
+<ul>
+<li>Systolic blood pressure and maximum inflation level cannot be greater than 300 mmHg;</li>
+<li>Systolic and diastolic blood pressure measurements and the maximum inflation level can be even numbers only;</li>
+<li>Systolic blood pressure must be greater than diastolic blood pressure;</li>
+<li>If there is no systolic blood pressure, there can be no diastolic blood pressure. (There can be a systolic measurement without a diastolic measurement.); and</li>
+<li>Diastolic blood pressure can be zero.</li>
+</ul>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-8_4f994472aa8e5fcf8a89e689d12e9c93">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>bpx <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'BPX_I'</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bpx1 <span class="ot">&lt;-</span> bpx[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXSY1"</span>, <span class="co"># Systolic Blood pres (1st rdg) mmHg: 8 - 150 YEARS</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXSY2"</span>, <span class="co"># Systolic: Blood pres (2nd rdg) mm Hg</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXSY3"</span>, <span class="co"># Systolic: Blood pres (3rd rdg) mm Hg</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXSY4"</span>, <span class="co"># Systolic: Blood pres (4th rdg) mm Hg</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXDI1"</span>, <span class="co"># Diastolic Blood pres (1st rdg) mmHg: 8 - 150 YEARS</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXDI2"</span>, <span class="co"># Diastolic: Blood pres (2nd rdg) mm Hg</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXDI3"</span>, <span class="co"># Diastolic: Blood pres (3rd rdg) mm Hg</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPXDI4"</span>)] <span class="co"># Diastolic: Blood pres (4th rdg) mm Hg</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>bpx_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(bpx1)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>bpx2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'BPX_I'</span>, bpx_vars, <span class="at">data =</span> bpx1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nhanesTranslate("BPX_I", bpx_vars, data = bpx1): No columns were
+translated</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(bpx2, <span class="at">file =</span> <span class="st">"data/components/bpx15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/bpq_i.htm">Blood Pressure &amp; Cholesterol (BPQ_H)</a>: Although these data were collected as part of the household questionnaire, if they are merged with the MEC exam data, exam sample weights should be used for the analyses.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-9_070b4f605e208e9aa7d921b555694993">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bpq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'BPQ_I'</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bpq1 <span class="ot">&lt;-</span> bpq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"BPQ080"</span>)] <span class="co"># high cholesterol</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>bpq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(bpq1)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>bpq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'BPQ_I'</span>, bpq_vars, <span class="at">data =</span> bpq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: BPQ080</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(bpq2, <span class="at">file =</span> <span class="st">"data/components/bpq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="sleep" class="level3">
+<h3 class="anchored" data-anchor-id="sleep">Sleep</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/slq_i.htm">Sleep Disorders (SLQ_H)</a>:</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-10_b79b777ce052afb58746e49cbae7c695">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>slq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'SLQ_I'</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>slq1 <span class="ot">&lt;-</span> slq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"SLD012"</span>)] <span class="co"># Sleep hours - weekdays or workdays</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>slq_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(slq1)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>slq2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'SLQ_I'</span>, slq_vars, <span class="at">data =</span> slq1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nhanesTranslate("SLQ_I", slq_vars, data = slq1): No columns were
+translated</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(slq2, <span class="at">file =</span> <span class="st">"data/components/slq15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="laboratory-data" class="level3">
+<h3 class="anchored" data-anchor-id="laboratory-data">Laboratory data</h3>
+<p><a href="https://wwwn.cdc.gov/nchs/nhanes/2015-2016/BIOPRO_i.htm">Standard Biochemistry Profile (BIOPRO_H)</a>: Exam sample weights should be used for analyses.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-11_29514a61217aae5e6be6b4abe8dd6728">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard Biochemistry Profile</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>biopro <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'BIOPRO_I'</span>) <span class="co"># 12 YEARS - 150 YEARS</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>biopro1 <span class="ot">&lt;-</span> biopro[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                    <span class="co">#"LBXSTR", # Triglycerides, refrigerated (mg/dL)</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSUA"</span>, <span class="co"># Uric acid (mg/dL)</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSTP"</span>, <span class="co"># Total protein (g/dL)</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSTB"</span>, <span class="co"># Total bilirubin (mg/dL)</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSPH"</span>, <span class="co"># Phosphorus (mg/dL)</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSNASI"</span>, <span class="co"># Sodium (mmol/L)</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSKSI"</span>, <span class="co"># Potassium (mmol/L)</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSGB"</span>, <span class="co"># Globulin (g/dL)</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"LBXSCA"</span>)] <span class="co"># Total Calcium (mg/dL)</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>biopro_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(biopro1) </span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>biopro2 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'BIOPRO_I'</span>, biopro_vars, <span class="at">data =</span> biopro1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nhanesTranslate("BIOPRO_I", biopro_vars, data = biopro1): No columns
+were translated</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(biopro2, <span class="at">file =</span> <span class="st">"data/components/biopro15.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="icd-10-cm-codes" class="level3">
+<h3 class="anchored" data-anchor-id="icd-10-cm-codes">ICD-10-CM codes</h3>
+<p><a href="https://wwwn.cdc.gov/Nchs/Nhanes/2015-2016/RXQ_RX_i.htm">Prescription Medications (RXQ_RX_H)</a>: The Prescription Medications subsection provides personal interview data on use of prescription medications during a one-month period prior to the participant’s interview date. During the household SP interview, survey participants are asked if they have taken medications in the past 30 days for which they needed a prescription. Those who answer “yes” are asked to show the interviewer the medication containers of all the products used.</p>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-12_71fcb84a0fa94551017d0ee837721816">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>rxq <span class="ot">&lt;-</span> <span class="fu">nhanes</span>(<span class="st">'RXQ_RX_I'</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>rxq10 <span class="ot">&lt;-</span> rxq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RXDRSC1"</span>)] <span class="co"># ICD-10-CM code 1</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>rxq11 <span class="ot">&lt;-</span> <span class="fu">names</span>(rxq10) </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>rxq12 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'RXQ_RX_I'</span>, rxq11, <span class="at">data =</span> rxq10)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: RXDRSC1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rxq20 <span class="ot">&lt;-</span> rxq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RXDRSC2"</span>)] <span class="co"># ICD-10-CM code 2</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>rxq21 <span class="ot">&lt;-</span> <span class="fu">names</span>(rxq20) </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>rxq22 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'RXQ_RX_I'</span>, rxq21, <span class="at">data =</span> rxq20)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: RXDRSC2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>rxq30 <span class="ot">&lt;-</span> rxq[<span class="fu">c</span>(<span class="st">"SEQN"</span>, <span class="co"># Respondent sequence number</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"RXDRSC3"</span>)] <span class="co"># ICD-10-CM code 3</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>rxq31 <span class="ot">&lt;-</span> <span class="fu">names</span>(rxq30) </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>rxq32 <span class="ot">&lt;-</span> <span class="fu">nhanesTranslate</span>(<span class="st">'RXQ_RX_I'</span>, rxq31, <span class="at">data =</span> rxq30)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Translated columns: RXDRSC3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(rxq12, <span class="at">file =</span> <span class="st">"data/components/rxq1215.RData"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(rxq22, <span class="at">file =</span> <span class="st">"data/components/rxq2215.RData"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(rxq32, <span class="at">file =</span> <span class="st">"data/components/rxq3215.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="merging-all-the-datasets---except-for-icd-10-codes" class="level2">
+<h2 class="anchored" data-anchor-id="merging-all-the-datasets---except-for-icd-10-codes">Merging all the datasets - except for ICD-10 codes</h2>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-13_928179bfa92cc9c486b4a68aadf45a56">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">join_all</span>(<span class="fu">list</span>(demo2, bmx2, diq2, smq2, dbq2, paq2, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                     huq2, bpx2, bpq2, slq2, biopro2),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">by =</span> <span class="st">"SEQN"</span>, <span class="at">type=</span><span class="st">'full'</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>nhanes15 <span class="ot">&lt;-</span> dat </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="save-dataset-for-later-use" class="level3">
+<h3 class="anchored" data-anchor-id="save-dataset-for-later-use">Save dataset for later use</h3>
+<div class="cell" data-hash="1b-index15_cache/html/unnamed-chunk-14_4515524862d1a20c475c61cd20cb617f">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(nhanes15)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9971   42</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(nhanes15, rxq12, rxq22, rxq32, <span class="at">file =</span> <span class="st">"data/analytic15.RData"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

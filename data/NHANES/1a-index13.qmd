@@ -1,0 +1,234 @@
+# Download cycle 8
+
+Downloading NHANES 2013-14 cycle components
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nhanesA)
+library(car)
+library(plyr)
+library(dplyr)
+```
+
+## Download and Subsetting to retain only the useful variables
+
+### Demographic
+
+[Demographic Variables and Sample Weights (DEMO_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/demo_h.htm): The 2-year sample weights (WTINT2YR, WTMEC2YR) should be used. 15 masked variance strata and 30 masked primary sampling units (PSUs) are included in the demographics file. Each stratum has 2 PSUs.
+
+```{r, cache=TRUE}
+demo <- nhanes('DEMO_H')    # Both males and females 0 YEARS - 150 YEARS
+demo1 <- demo[c("SEQN",     # Respondent sequence number
+                "RIDAGEYR", # Age in years at screening
+                "RIAGENDR", # gender
+                "DMDEDUC2", # Education level - Adults 20+
+                "RIDRETH1", # race/ethnicity
+                "DMDMARTL", # marital status	
+                "INDHHIN2", # Annual household income
+                "DMDBORN4", # where born
+                "RIDEXPRG", # Pregnancy status at exam (released for 20-44 yrs)
+                "SDDSRVYR", # survey cycle
+                "WTINT2YR", # Full sample 2 year weights
+                "WTMEC2YR", # Full sample 2 year MEC exam weight
+                "SDMVPSU",  # Masked variance pseudo-PSU
+                "SDMVSTRA")]# Masked variance pseudo-stratum
+demo_vars <- names(demo1) 
+demo2 <- nhanesTranslate('DEMO_H', demo_vars, data = demo1)
+saveRDS(demo2, file = "data/components/demo13.RData")
+```
+
+### BMI
+
+[Body Measures (BMX_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/bmx_h.htm): The NHANES examination sample weights should be used to analyze the body measurement data. However, if the data is joined with data from the MEC, the MEC sample weights should be used.
+
+```{r, cache=TRUE}
+bmx <- nhanes('BMX_H')
+bmx1 <- bmx[c("SEQN", # Respondent sequence number
+              "BMXBMI")] # Body Mass Index (kg/m**2): 2 YEARS - 150 YEARS
+bmx_vars <- names(bmx1)
+bmx2 <- nhanesTranslate('BMX_H', bmx_vars, data = bmx1)
+saveRDS(bmx2, file = "data/components/bmx13.RData")
+```
+
+### Diabetes
+
+[Diabetes (DIQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/diq_h.htm): diabetes questionnaire data must be conducted using the appropriate survey design variables, sample weights, and the basic demographic variables. Interview weights should only be used if questionnaire data are analyzed by themselves. However, if the data is joined with data from the MEC, the MEC sample weights should be used.
+
+```{r, cache=TRUE}
+diq <- nhanes('DIQ_H')
+diq1 <- diq[c("SEQN", # Respondent sequence number
+              "DIQ010", # Doctor told you have diabetes
+              "DIQ050", # Taking insulin now
+              "DIQ070", # Take diabetic pills to lower blood sugar
+              "DIQ175A")] # Family history
+diq_vars <- names(diq1)
+diq2 <- nhanesTranslate('DIQ_H', diq_vars, data = diq1)
+saveRDS(diq2, file = "data/components/diq13.RData")
+```
+
+### Smoking
+
+[Smoking - Cigarette Use (SMQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/smq_h.htm): Interview weights should only be used if questionnaire data are analyzed by themselves. However, if the data is joined with data from the MEC, the MEC sample weights should be used.
+
+```{r, cache=TRUE}
+smq <- nhanes('SMQ_H')
+smq1 <- smq[c("SEQN", # Respondent sequence number
+              "SMQ020", # Smoked at least 100 cigarettes in life
+              "SMQ040")] # Do you now smoke cigarettes?: 18 YEARS - 150 YEARS
+smq_vars <- names(smq1)
+smq2 <- nhanesTranslate('SMQ_H', smq_vars, data = smq1)
+saveRDS(smq2, file = "data/components/smq13.RData")
+```
+
+### Diet
+
+[Diet Behavior & Nutrition (DBQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/dbq_h.htm): interview sample weights may be used in their analysis. However, if the data is joined with data from the MEC, the MEC sample weights should be used.
+
+```{r, cache=TRUE}
+dbq <- nhanes('DBQ_H')
+dbq1 <- dbq[c("SEQN", # Respondent sequence number
+              "DBQ700")] # How healthy is the diet: 16 YEARS - 150 YEARS
+dbq_vars <- names(dbq1)
+dbq2 <- nhanesTranslate('DBQ_H', dbq_vars, data = dbq1)
+saveRDS(dbq2, file = "data/components/dbq13.RData")
+```
+
+### Physical activity
+
+[Physical Activity (PAQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/PAQ_H.htm): the interview sample weights should be used in their analysis. However, if the data is joined with data from the MEC, the MEC sample weights should be used.
+
+```{r, cache=TRUE}
+paq <- nhanes('PAQ_H')
+paq1 <- paq[c("SEQN", # Respondent sequence number
+              "PAQ605")] # Vigorous work activity: 18 YEARS150 YEARS
+paq_vars <- names(paq1)
+paq2 <- nhanesTranslate('PAQ_H', paq_vars, data = paq1)
+saveRDS(paq2, file = "data/components/paq13.RData")
+```
+
+### Access to healthcare
+
+[Hospital Utilization & Access to Care (HUQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/huq_H.htm): Although these data were collected as part of the household questionnaire, if they are merged with the MEC exam data, exam sample weights should be used for the analyses.
+
+```{r, cache=TRUE}
+huq <- nhanes('HUQ_H')
+huq1 <- huq[c("SEQN", # Respondent sequence number
+              "HUQ030")] # Routine place to go for healthcare
+huq_vars <- names(huq1)
+huq2 <- nhanesTranslate('HUQ_H', huq_vars, data = huq1)
+saveRDS(huq2, file = "data/components/huq13.RData")
+```
+
+### Blood pressure
+
+[Blood Pressure (BPX_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/bpx_H.htm): Exam sample weights should be used for analyses.
+
+-   Systolic blood pressure and maximum inflation level cannot be greater than 300 mmHg;
+-   Systolic and diastolic blood pressure measurements and the maximum inflation level can be even numbers only;
+-   Systolic blood pressure must be greater than diastolic blood pressure;
+-   If there is no systolic blood pressure, there can be no diastolic blood pressure. (There can be a systolic measurement without a diastolic measurement.); and
+-   Diastolic blood pressure can be zero.
+
+```{r, cache=TRUE}
+bpx <- nhanes('BPX_H')
+bpx1 <- bpx[c("SEQN", # Respondent sequence number
+              "BPXSY1", # Systolic Blood pres (1st rdg) mmHg: 8 - 150 YEARS
+              "BPXSY2", # Systolic: Blood pres (2nd rdg) mm Hg
+              "BPXSY3", # Systolic: Blood pres (3rd rdg) mm Hg
+              "BPXSY4", # Systolic: Blood pres (4th rdg) mm Hg
+              "BPXDI1", # Diastolic Blood pres (1st rdg) mmHg: 8 - 150 YEARS
+              "BPXDI2", # Diastolic: Blood pres (2nd rdg) mm Hg
+              "BPXDI3", # Diastolic: Blood pres (3rd rdg) mm Hg
+              "BPXDI4")] # Diastolic: Blood pres (4th rdg) mm Hg
+bpx_vars <- names(bpx1)
+bpx2 <- nhanesTranslate('BPX_H', bpx_vars, data = bpx1)
+saveRDS(bpx2, file = "data/components/bpx13.RData")
+```
+
+[Blood Pressure & Cholesterol (BPQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/bpq_H.htm): Although these data were collected as part of the household questionnaire, if they are merged with the MEC exam data, exam sample weights should be used for the analyses.
+
+```{r, cache=TRUE}
+bpq <- nhanes('BPQ_H')
+bpq1 <- bpq[c("SEQN", # Respondent sequence number
+              "BPQ080")] # high cholesterol
+bpq_vars <- names(bpq1)
+bpq2 <- nhanesTranslate('BPQ_H', bpq_vars, data = bpq1)
+saveRDS(bpq2, file = "data/components/bpq13.RData")
+```
+
+### Sleep
+
+[Sleep Disorders (SLQ_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/slq_H.htm):
+
+```{r, cache=TRUE}
+slq <- nhanes('SLQ_H')
+slq1 <- slq[c("SEQN", # Respondent sequence number
+              "SLD010H")] # Sleep hours 
+slq_vars <- names(slq1)
+slq2 <- nhanesTranslate('SLQ_H', slq_vars, data = slq1)
+saveRDS(slq2, file = "data/components/slq13.RData")
+```
+
+### Laboratory data
+
+[Standard Biochemistry Profile (BIOPRO_H)](https://wwwn.cdc.gov/nchs/nhanes/2013-2014/BIOPRO_H.htm): Exam sample weights should be used for analyses.
+
+```{r, cache=TRUE}
+# Standard Biochemistry Profile
+biopro <- nhanes('BIOPRO_H') # 12 YEARS - 150 YEARS
+biopro1 <- biopro[c("SEQN", # Respondent sequence number
+                    #"LBXSTR", # Triglycerides, refrigerated (mg/dL)
+                    "LBXSUA", # Uric acid (mg/dL)
+                    "LBXSTP", # Total protein (g/dL)
+                    "LBXSTB", # Total bilirubin (mg/dL)
+                    "LBXSPH", # Phosphorus (mg/dL)
+                    "LBXSNASI", # Sodium (mmol/L)
+                    "LBXSKSI", # Potassium (mmol/L)
+                    "LBXSGB", # Globulin (g/dL)
+                    "LBXSCA")] # Total Calcium (mg/dL)
+biopro_vars <- names(biopro1) 
+biopro2 <- nhanesTranslate('BIOPRO_H', biopro_vars, data = biopro1)
+saveRDS(biopro2, file = "data/components/biopro13.RData")
+```
+
+### ICD-10-CM codes
+
+[Prescription Medications (RXQ_RX_H)](https://wwwn.cdc.gov/Nchs/Nhanes/2013-2014/RXQ_RX_H.htm): The Prescription Medications subsection provides personal interview data on use of prescription medications during a one-month period prior to the participant's interview date. During the household SP interview, survey participants are asked if they have taken medications in the past 30 days for which they needed a prescription. Those who answer "yes" are asked to show the interviewer the medication containers of all the products used.
+
+```{r, cache=TRUE}
+rxq <- nhanes('RXQ_RX_H')
+rxq10 <- rxq[c("SEQN", # Respondent sequence number
+               "RXDRSC1")] # ICD-10-CM code 1
+rxq11 <- names(rxq10) 
+rxq12 <- nhanesTranslate('RXQ_RX_H', rxq11, data = rxq10)
+
+rxq20 <- rxq[c("SEQN", # Respondent sequence number
+               "RXDRSC2")] # ICD-10-CM code 2
+rxq21 <- names(rxq20) 
+rxq22 <- nhanesTranslate('RXQ_RX_H', rxq21, data = rxq20)
+
+rxq30 <- rxq[c("SEQN", # Respondent sequence number
+               "RXDRSC3")] # ICD-10-CM code 3
+rxq31 <- names(rxq30) 
+rxq32 <- nhanesTranslate('RXQ_RX_H', rxq31, data = rxq30)
+
+saveRDS(rxq12, file = "data/components/rxq1213.RData")
+saveRDS(rxq22, file = "data/components/rxq2213.RData")
+saveRDS(rxq32, file = "data/components/rxq3213.RData")
+```
+
+## Merging all the datasets - except for ICD-10 codes
+
+```{r, cache=TRUE}
+dat <- join_all(list(demo2, bmx2, diq2, smq2, dbq2, paq2, 
+                     huq2, bpx2, bpq2, slq2, biopro2),
+                by = "SEQN", type='full')
+nhanes13 <- dat
+```
+
+### Save dataset for later use
+
+```{r, cache=TRUE}
+dim(nhanes13)
+save(nhanes13, rxq12, rxq22, rxq32, file = "data/analytic13.RData")  
+```

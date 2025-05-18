@@ -1,0 +1,132 @@
+# Data simulation
+
+```{r}
+# install.packages(c('glm2', 'arm', 'lme4', 'epiDisplay', 'twang', 'gbm', 'latticeExtra'))
+# install.packages(
+#   "https://cran.r-project.org/src/contrib/Archive/Plasmode/Plasmode_0.1.0.tar.gz",
+#   repos = NULL, type = "source"
+# )
+require(Plasmode)
+```
+
+```{r}
+require(Plasmode)
+require(dplyr)
+library(parallel)
+library(pbapply)
+library(progress)
+library(plyr)
+```
+
+
+```{r}
+make_ids_unique <- function(ids) {
+  dup_ids <- ids[duplicated(ids) | duplicated(ids, fromLast = TRUE)]
+  unique_dup_ids <- unique(dup_ids)
+  for (id in unique_dup_ids) {
+    suffix <- 1
+    indices <- which(ids == id)
+    for (index in indices) {
+      ids[index] <- paste0(ids[index], ".", suffix)
+      suffix <- suffix + 1
+    }
+  }
+  return(ids)
+}
+```
+
+
+```{r}
+load(file = "data/MasterPlasmodeData.RData")
+simdata <- readRDS(file = "data/plasmode-rareExp-ID.RData")
+ls()
+```
+
+
+```{r}
+subscript <- "ER"
+base_dir <- "data"
+intermediate_dir <- paste0(base_dir, "/scenario", subscript)
+dir.create(base_dir, showWarnings = FALSE)
+dir.create(intermediate_dir, showWarnings = FALSE)
+```
+
+
+```{r}
+custom_simulate <- function(i, plasmode.data, analytic.data, demovars, lab.list, proxy.list.arg, nSim, intermediate_dir) { 
+  df_for_join <- data.frame(
+  id = plasmode.data[, i],
+  EVENT = plasmode.data[, i + nSim],
+  EXPOSURE = plasmode.data[, i + 2 * nSim]
+  )
+  
+  plasmodeData.i <- plyr::join(x = df_for_join,
+                               y = analytic.data, # This is full.data
+                               by = "id",         
+                               type = "left")
+
+  if (nrow(plasmodeData.i) != nrow(df_for_join)) {
+    warning(paste("Join for simulation", i, "resulted in different row count than expected (", nrow(plasmodeData.i), "vs", nrow(df_for_join),"). Check 'by' variable and data integrity."))
+  }
+  if (any(is.na(plasmodeData.i$id))) { # IDs should not become NA after a left join on x's key
+    warning(paste("NA values found in 'id' column after join for iteration", i, ". This is unexpected. Review join logic."))
+  }
+
+  plasmodeData.i$outcome <- plasmodeData.i$EVENT 
+  plasmodeData.i$exposure <- plasmodeData.i$EXPOSURE
+  plasmodeData.i$EVENT <- NULL
+  plasmodeData.i$EXPOSURE <- NULL
+  plasmodeData.i$diabetes <- NULL
+  plasmodeData.i$obese <- NULL
+  plasmodeData.i$l1 <- NULL
+  plasmodeData.i$l2 <- NULL
+  plasmodeData.i$l3 <- NULL
+  plasmodeData.i$l4 <- NULL
+  plasmodeData.i$l5 <- NULL
+  plasmodeData.i$l6 <- NULL
+  
+  plasmodeData.i$id <- make_ids_unique(plasmodeData.i$id) 
+  
+  saveRDS(plasmodeData.i, file = paste0(intermediate_dir, "/data_", i, ".rds"))
+  return(plasmodeData.i)
+}
+```
+
+
+```{r}
+nSim <- 1000
+# Initialize the cluster
+no_cores <- detectCores() - 2
+cl <- makeCluster(no_cores)
+print(paste("Number of cores:", no_cores))
+
+# Export necessary variables and functions to the cluster
+clusterExport(cl, varlist = c("custom_simulate", "simdata", "full.data",
+                              "demovars", "labvars.original",
+                              "proxy.list", "nSim",
+                              "make_ids_unique", "intermediate_dir"))
+
+# Load necessary libraries on each worker node
+clusterEvalQ(cl, {
+  library(dplyr)
+  library(Plasmode)
+  library(plyr)
+})
+
+# Use pbapply to run the simulations in parallel with a progress bar
+results <- tryCatch({
+  pblapply(1:nSim, function(i) {
+    custom_simulate(i, simdata, full.data, demovars, labvars.original, proxy.list, nSim, intermediate_dir)
+  }, cl = cl)
+}, error = function(e) {
+  print(paste("Error in parLapply:", e))
+  stopCluster(cl)  # Ensure the cluster is stopped in case of error
+  NULL
+})
+
+# Stop the cluster
+stopCluster(cl)
+
+print("Simulation completed.")
+```
+
